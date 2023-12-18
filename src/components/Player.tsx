@@ -1,20 +1,19 @@
 "use client";
-import React from "react";
-import { usePlayerStore, usePlayerStore2 } from "@/components/playerStore";
-type Props = {
+type PlayerType = {
+  id: number;
   playerName: string;
+  point: number;
+  calculatedPoints: (id: number, number: number) => void;
 };
 
-const Player = (props: Props) => {
-  const playerData = usePlayerStore();
-
+const Player = (props: PlayerType) => {
   return (
     <div className="border border-black mt-3 w-3/6 text-center">
       <div>Player Name: {props.playerName}</div>
-      <div>point:25000</div>
-      <div>{playerData.playerName}</div>
-      <div>{playerData.point}</div>
-      <button onClick={() => playerData.calculatedPoints(-200)}>cul</button>
+      <div>point:{props?.point}</div>
+      <button onClick={() => props?.calculatedPoints(props.id, -200)}>
+        cul
+      </button>
     </div>
   );
 };
