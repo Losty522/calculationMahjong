@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Player from "./Player";
 import { useFeildStatus, usePlayerStore } from "./playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
@@ -17,20 +18,24 @@ const Field = () => {
     return null;
   }
   const handleAgari = () => {
-    // next create agari functionarity
+    // next create agari functiona
   };
 
   return (
     <>
-      <button
-        onClick={() => {
-          handleAgari();
-        }}
-      >
-        Agari
-      </button>
+      <Link href="/agariForm">
+        <button
+          className="border border-black"
+          onClick={() => {
+            handleAgari();
+          }}
+        >
+          Agari
+        </button>
+      </Link>
 
       <button
+        className="border border-black"
         onClick={() => {
           handleResetStrage();
         }}
@@ -41,6 +46,7 @@ const Field = () => {
       <br />
 
       <button
+        className="border border-black"
         onClick={() => {
           feildStatus?.changeRound(1);
         }}
