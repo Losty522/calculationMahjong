@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Player from "./Player";
-import { useFeildStatus, usePlayerStore } from "./playerStore";
+import { PLAYER_INDEX, useFeildStatus, usePlayerStore } from "./playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
 
 const Field = () => {
@@ -66,28 +66,37 @@ const Field = () => {
 
       <div>round:{feildStatus?.round}</div>
       <div>Honba:{feildStatus?.honba}</div>
+      <div>OyaId:{feildStatus?.oyaId}</div>
       <Player
-        id={Number(playerDataState?.player1?.id)}
-        playerName={playerDataState?.player1.playerName}
-        point={playerDataState?.player1.point}
+        id={Number(playerDataState?.playerData[PLAYER_INDEX.PLAYER1].id)}
+        playerName={
+          playerDataState?.playerData[PLAYER_INDEX.PLAYER1].playerName
+        }
+        point={playerDataState?.playerData[PLAYER_INDEX.PLAYER1].point}
         calculatedPoints={playerDataState?.calculatedPoints}
       />
       <Player
-        id={Number(playerDataState?.player2?.id)}
-        playerName={playerDataState?.player2.playerName}
-        point={playerDataState?.player2.point}
+        id={Number(playerDataState?.playerData[PLAYER_INDEX.PLAYER2].id)}
+        playerName={
+          playerDataState?.playerData[PLAYER_INDEX.PLAYER2].playerName
+        }
+        point={playerDataState?.playerData[PLAYER_INDEX.PLAYER2].point}
         calculatedPoints={playerDataState?.calculatedPoints}
       />
       <Player
-        id={Number(playerDataState?.player3?.id)}
-        playerName={playerDataState?.player3.playerName}
-        point={playerDataState?.player3.point}
+        id={Number(playerDataState?.playerData[PLAYER_INDEX.PLAYER3].id)}
+        playerName={
+          playerDataState?.playerData[PLAYER_INDEX.PLAYER3].playerName
+        }
+        point={playerDataState?.playerData[PLAYER_INDEX.PLAYER3]?.point}
         calculatedPoints={playerDataState?.calculatedPoints}
       />
       <Player
-        id={Number(playerDataState?.player4?.id)}
-        playerName={playerDataState?.player4.playerName}
-        point={playerDataState?.player4.point}
+        id={Number(playerDataState?.playerData[PLAYER_INDEX.PLAYER4].id)}
+        playerName={
+          playerDataState?.playerData[PLAYER_INDEX.PLAYER4].playerName
+        }
+        point={playerDataState?.playerData[PLAYER_INDEX.PLAYER4].point}
         calculatedPoints={playerDataState?.calculatedPoints}
       />
     </>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { instantMenuState, useAgariFormData } from "../playerStore";
+import { AGARI_WAY, instantMenuState, useAgariFormData } from "../playerStore";
 
 type Props = {
   playerIndex: number;
@@ -26,21 +26,34 @@ const PointForm = (props: Props) => {
             (value) => value === true
           ).length;
           if (
-            agariStoreData.agariData[props.playerIndex].fu == 30 &&
-            (trueCount >= 2 || !agariStoreData.agariWay[0])
+            //if fu is already 25 and player are more than 2 or not tsumo.
+            agariStoreData.agariData[props.playerIndex].fuIndex == 1 &&
+            (trueCount >= 2 || !agariStoreData.agariWay[AGARI_WAY.TSUMO])
           )
             return;
 
           if (
-            agariStoreData.agariData[props.playerIndex].fu == 30 &&
-            agariStoreData.agariData[props.playerIndex].han == 1
+            //fu 30 and han 1
+            agariStoreData.agariData[props.playerIndex].fuIndex == 2 &&
+            agariStoreData.agariData[props.playerIndex].han <= 2
           ) {
-            agariStoreData.changeHan(props.playerIndex, 1);
-            agariStoreData.changeFu(props.playerIndex, -10);
+            agariStoreData.changeFu(props.playerIndex, -1);
+            if (agariStoreData.agariWay[AGARI_WAY.TSUMO]) {
+              agariStoreData.changeHan(
+                props.playerIndex,
+                -agariStoreData.agariData[props.playerIndex].han + 3
+              ); //reset 3 han
+            } else {
+              agariStoreData.changeHan(
+                props.playerIndex,
+                -agariStoreData.agariData[props.playerIndex].han + 2
+              ); //reset 2 han
+            }
             return;
           }
-          if (agariStoreData.agariData[props.playerIndex].fu >= 30) {
-            agariStoreData.changeFu(props.playerIndex, -10);
+
+          if (agariStoreData.agariData[props.playerIndex].fuIndex >= 1) {
+            agariStoreData.changeFu(props.playerIndex, -1);
           }
         }}
       >
@@ -49,7 +62,11 @@ const PointForm = (props: Props) => {
       <input
         name="Fu"
         type="number"
-        value={agariStoreData.agariData[props.playerIndex].fu}
+        value={
+          agariStoreData.fuDisplay[
+            agariStoreData.agariData[props.playerIndex].fuIndex
+          ]
+        }
         step={10}
         min={20}
         max={110}
@@ -58,8 +75,14 @@ const PointForm = (props: Props) => {
       <button
         type="button"
         onClick={() => {
-          if (agariStoreData.agariData[props.playerIndex].fu <= 100) {
-            agariStoreData.changeFu(props.playerIndex, 10);
+          if (agariStoreData.agariData[props.playerIndex].fuIndex <= 9) {
+            agariStoreData.changeFu(props.playerIndex, 1);
+            if (agariStoreData.agariData[props.playerIndex].fuIndex == 0) {
+              agariStoreData.changeHan(
+                props.playerIndex,
+                -agariStoreData.agariData[props.playerIndex].han + 3
+              ); //reset 3 han
+            }
           }
         }}
       >
@@ -71,10 +94,32 @@ const PointForm = (props: Props) => {
         type="button"
         onClick={() => {
           if (
-            agariStoreData.agariWay[0] &&
-            agariStoreData.agariData[props.playerIndex].fu == 20
-          )
+            // case of tsumo and 20fu and han is more than 2
+            agariStoreData.agariWay[AGARI_WAY.TSUMO] &&
+            agariStoreData.agariData[props.playerIndex].fuIndex == 0 &&
+            agariStoreData.agariData[props.playerIndex].han <= 2
+          ) {
             return;
+          }
+
+          if (
+            // case of tsumo and 25fu and han is more than 3
+            agariStoreData.agariWay[AGARI_WAY.TSUMO] &&
+            agariStoreData.agariData[props.playerIndex].fuIndex == 1 &&
+            agariStoreData.agariData[props.playerIndex].han <= 3
+          ) {
+            return;
+          }
+
+          if (
+            // case of tsumo and 25fu and han is more than 3
+            agariStoreData.agariWay[AGARI_WAY.RON] &&
+            agariStoreData.agariData[props.playerIndex].fuIndex == 1 &&
+            agariStoreData.agariData[props.playerIndex].han <= 2
+          ) {
+            return;
+          }
+
           if (agariStoreData.agariData[props.playerIndex].han >= 2) {
             agariStoreData.changeHan(props.playerIndex, -1);
           }

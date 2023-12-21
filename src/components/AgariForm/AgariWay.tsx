@@ -9,14 +9,14 @@ const AgariWay = () => {
 
     if (wayText == "TSUMO") {
       agariData.agariData.forEach((data, index) => {
-        agariData.changeFu(index, 20 - data.fu);
+        agariData.changeFu(index, -data.fuIndex); //reset number
         agariData.changeHan(index, 2 - data.han);
 
         agariData.changeAgariPlayer(index, false);
       });
     } else {
       agariData.agariData.forEach((data, index) => {
-        agariData.changeFu(index, 30 - data.fu);
+        agariData.changeFu(index, -data.fuIndex + 2); //reset from 30fu index
         agariData.changeHan(index, 1 - data.han);
       });
     }
