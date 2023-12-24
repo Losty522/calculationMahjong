@@ -2,17 +2,6 @@
 import {create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export interface playerDataInterface {
-  id:number,
-  playerName: string,
-  point: number,
-}
-
-export type playerStoreType = {
-  playerData:playerDataInterface[];
-  calculatedPoints:(playerId:number,number:number) => void;
-}
-
 export enum instantMenuState {
   None=0,
   Mangan=1,
@@ -34,21 +23,11 @@ export enum AGARI_WAY {
   RON=1,
 }
 
-export type FeildStatusType = {
-  round:number,
-  honba:number,
-  oyaId:number,
-  agariMenue:boolean,
-  changeNextOya:()=>void,
-  changeRound:(number:number)=>void;
-  changeHonba:(number:number)=>void;
-}
-
 
 export interface AgariData {
   fuIndex: number;
   han: number;
-  instantMenu: (boolean | number)[];
+  yakumanNum: number;
 }
 export type agariFormDataType={
   agariPlayer:boolean[],
@@ -59,40 +38,48 @@ export type agariFormDataType={
   changeAgariWay:(wayText:("RON"|"TSUMO")) =>void;
   changeFu:(playerIndex:number,number:number)=>void,
   changeHan:(playerIndex:number,number:number)=>void
+  changeYakumanNum:(playerIndex:number,number:number)=>void
   changeAgariPlayer:(playerIndex:number,bool:boolean)=>void,
   changeAgariFrom:(playerIndex:number,bool:boolean)=>void,
-  changeInstantManu:(playerIndex:number,index:number,bool:boolean,number?:number)=>void,
   initializeData:()=>void,
 }
+
+const initialAgariFormData = {
+  agariPlayer:[false,false,false,false],
+  agariWay:[false,true],
+  agariFrom:[false,false,false,false],
+  fuDisplay:[20,25,30,40,50,60,70,80,90,100,110],
+  agariData:[
+    {
+    fuIndex:2,
+    han:1,
+    yakumanNum:1,
+    
+  },
+  {
+    fuIndex:2,
+    han:1,
+    yakumanNum:1,
+    
+  },
+  {
+    fuIndex:2,
+    han:1,
+    yakumanNum:1,
+    
+  },
+  {
+    fuIndex:2,
+    han:1,
+    yakumanNum:1
+  },    
+]
+}
+
 export const useAgariFormData = create<agariFormDataType>(
   (set)=>(
     {
-      agariPlayer:[false,false,false,false],
-      agariWay:[false,true],
-      agariFrom:[false,false,false,false],
-      fuDisplay:[20,25,30,40,50,60,70,80,90,100,110],
-      agariData:[
-        {
-        fuIndex:2,
-        han:1,
-        instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-      },
-      {
-        fuIndex:2,
-        han:1,
-        instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-      },
-      {
-        fuIndex:2,
-        han:1,
-        instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-      },
-      {
-        fuIndex:2,
-        han:1,
-        instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-      },    
-    ],
+      ...initialAgariFormData,
     changeAgariWay:(wayText:("RON"|"TSUMO"))=>set(()=>{
       if(wayText=="TSUMO"){
         return { agariWay:[true,false]}
@@ -116,7 +103,14 @@ export const useAgariFormData = create<agariFormDataType>(
             : data
         ),
       })),
-  
+      changeYakumanNum: (playerIndex: number, number: number) =>
+      set((state) => ({
+        agariData: state.agariData.map((data, dataIndex) =>
+          dataIndex === playerIndex
+            ? { ...data, yakumanNum: data.yakumanNum + number }
+            : data
+        ),
+      })),
       changeAgariPlayer:(playerIndex:number,bool:boolean)=>set((state)=>{
 
         const trueCount = state.agariPlayer.filter((value) => value === true).length;
@@ -134,71 +128,45 @@ export const useAgariFormData = create<agariFormDataType>(
         return {agariFrom:tmpArray}
       }),
 
-      changeInstantManu: (playerIndex: number, index: number, bool: boolean, number?: number) =>
-      set((state) => ({
-        agariData: state.agariData.map((data, dataIndex) => {
-          if (dataIndex === playerIndex) {
-            const tmpArray = [false, false, false, false, false, false, 1];
-    
-            if (index >= 0 && index <= 4) {
-              tmpArray[index] = bool;
-            } else if (number !== undefined && index === 5) {
-              tmpArray[index] = bool;
-              tmpArray[index + 1] = number;
-            } else if (index === 5) {
-              tmpArray[index] = bool;
-              tmpArray[6] = 1;
-            } else {
-              return data;
-            }
-            return { ...data, instantMenu: tmpArray };
-          } else {
-            return data;
-          }
-        }),
-      })),
-    
-      initializeData:()=>set({
-        agariPlayer:[false,false,false,false],
-        agariWay:[false,true],
-        agariFrom:[false,false,false,false],
-        fuDisplay:[20,25,30,40,50,60,70,80,90,100,110],
-          agariData:[
-          {
-          fuIndex:2,
-          han:1,
-          instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-        },
-        {
-          fuIndex:2,
-          han:1,
-          instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-        },
-        {
-          fuIndex:2,
-          han:1,
-          instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-        },
-        {
-          fuIndex:2,
-          han:1,
-          instantMenu:[true,false,false,false,false,false,1],//none,man,hane,bai,3bai,yaku,how many yakuman  
-        },    
-      ],
-  
-      })
+      initializeData:()=>set({...initialAgariFormData}),
     }
     ))
+
+
+export type FeildStatusType = {
+  round:number,
+  displayRound:string[],
+  honba:number,
+  chips:number,
+  oyaId:number,
+  agariMenue:boolean,
+  initializeData:()=>void,
+  changeNextOya:()=>void,
+  changeRound:(number:number)=>void;
+  changeHonba:(number:number)=>void;
+  changeChips:(number:number)=>void;
+}
+    
+
+const initialFeildStatus = {
+  round:0,
+  displayRound:["East 1", "East 2", "East 3", "East 4", "South 1", "South 2", "South 3", "South 4", "West 1", "West 2", "West 3", "West 4", "North 1", "North 2", "North 3", "North 4"],
+  honba:0,
+  chips:0,
+  oyaId:0,
+  agariMenue:false,
+}
 
 export const useFeildStatus = create<FeildStatusType>()(
 persist(
   (set)=>({
-  round:0,
-  honba:0,
-  oyaId:0,
-  agariMenue:false,
-  changeRound:(number:number)=>set((state)=>({round:state.round + number})),
+    ...initialFeildStatus,
+  initializeData:()=>set({
+    ...initialFeildStatus
+  }),
+  changeRound:(number:number)=>set((state)=>(state.round<15?{round:state.round + number}:{})),
   changeHonba:(number:number)=>set((state)=>({honba:state.honba + number})),
+  changeChips:(number:number)=>set((state)=>({chips:state.chips + number})),
   changeAgariMenue:(bool:boolean)=>set((state)=>({agariMenue:bool})),
   changeNextOya:()=>set((state)=>{
     if(state.oyaId == 3){
@@ -215,33 +183,83 @@ persist(
 )
 )
 
+
+
+export interface playerDataInterface {
+  id:number,
+  playerName: string,
+  point: number,
+  riichi:boolean,
+  rank:number,
+}
+
+export type playerStoreType = {
+  playerData:playerDataInterface[];
+  startPositonId:number[];
+  playerOrder:number[]
+  initializeData:()=>void;
+  calculatedPoints:(playerId:number,number:number) => void;
+  changeRiici:(playerId: number,bool:boolean)=>void;
+  resetAllRiich:()=>void;
+  updateRanking:()=>void;
+
+}
+
+const initialPlayerArrObj:playerDataInterface[] = [
+  {
+    id:0,
+    playerName: "Player1",
+    point: 25000,
+    riichi:false,
+    rank:0
+  },
+  {
+    id:1,
+    playerName: "Player2",
+    point: 25000,
+    riichi:false,
+    rank:0
+  },
+
+  {
+    id:2,
+    playerName: "Player3",
+    point: 25000,
+    riichi:false,
+    rank:0
+  },
+  {
+    id:3,
+    playerName: "Player4",
+    point: 25000,
+    riichi:false,
+    rank:0
+  },
+]
+
+const initalWholeObj = {
+  playerData:[...initialPlayerArrObj],
+  startPositonId:[3,1,0,2],
+  playerOrder:[0,1,2,3]
+}
+
 export const usePlayerStore = create<playerStoreType>()(
   persist(
     (set) => ({
-      playerData:[
-        {
-          id:0,
-          playerName: "Player1",
-          point: 25000,
-        },
-        {
-          id:1,
-          playerName: "Player2",
-          point: 25000,
-        },
-  
-        {
-          id:2,
-          playerName: "Player3",
-          point: 25000,
-        },
-        {
-          id:3,
-          playerName: "Player4",
-          point: 25000,
-        },
-        ]
-      ,      
+        ...initalWholeObj,      
+        initializeData:()=>set({
+          ...initalWholeObj
+      }),      
+      changeRiici:(playerId: number,bool:boolean)=>set((state)=>({
+        playerData:state.playerData.map((data,index)=>
+        playerId === index 
+        ?{...data,riichi:bool}
+        :data
+        )
+      })),
+      resetAllRiich:()=>set((state)=>({
+        playerData:state.playerData.map((data)=>({...data,riichi:false}))
+      })),
       calculatedPoints: (playerId: number, number: number) =>
       set((state) => ({
         playerData: state.playerData.map((data, dataIndex) =>
@@ -250,285 +268,33 @@ export const usePlayerStore = create<playerStoreType>()(
             : data
         ),
       })),
-    })
-    ,
+      updateRanking:()=>set((state)=>{
+       const tempArrObj = [...state.playerData];
+       const tempOrderArr:number[] = [];
+       tempArrObj.sort(function(a,b){
+        if(a.point === b.point){
+          return state.startPositonId[a.id] - state.startPositonId[b.id];
+        } 
+        return b.point - a.point
+       })
+       tempArrObj.forEach(data=>{
+        tempOrderArr.push(data.id);
+       })
+
+       console.log(tempArrObj)
+       const updatePlayerData = state.playerData.map((data)=>{
+        const newIndex = tempArrObj.findIndex(player=>player.id === data.id);
+        return {...data,rank: newIndex+1}
+       })
+       
+       return {playerData:updatePlayerData,playerOrder:tempOrderArr}
+
+      }),  
+      
+    }),
     {
       name: "playerStoreData",
       storage: createJSONStorage(() => localStorage),
     }
   )
 );
-
-
-
-export const ronKoPointTable = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //20 fu dammy table
-  [
-    0, 1600, 3200, 6400, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //25fu
-  [
-    1000, 2000, 3900, 7700, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //30fu
-  [
-    1300, 2600, 5200, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //40fu
-  [
-    1600, 3200, 6400, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //50fu
-  [
-    2000, 3900, 7700, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //60fu
-  [
-    2300, 4500, 8000, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //70fu
-  [
-    2600, 5200, 8000, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //80fu
-  [
-    2900, 5800, 8000, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //90fu
-  [
-    3200, 6400, 8000, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //100fu
-  [
-    3600, 7100, 8000, 8000, 8000, 12000, 12000, 16000, 16000, 16000, 24000,
-    24000, 36000,
-  ], //110fu
-];
-
-export const ronOyaPointTable = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], //20 fu dammy table
-  [
-    0, 2400, 4800, 9600, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //25fu
-  [
-    1500, 2900, 5800, 11600, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //30fu
-  [
-    2000, 3900, 7700, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //40fu
-  [
-    2400, 4800, 9600, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //50fu
-  [
-    2900, 5800, 11600, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //60fu
-  [
-    3400, 6800, 12000, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //70fu
-  [
-    3900, 7700, 12000, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //80fu
-  [
-    4400, 8700, 12000, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //90fu
-  [
-    4800, 9600, 12000, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //100fu
-  [
-    5300, 10600, 12000, 12000, 12000, 18000, 18000, 24000, 24000, 24000, 36000,
-    36000, 48000,
-  ], //110fu
-];
-
-
-export const tsumoOyaPointTable = [
-  [0, 700, 1300, 2600, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //20 fu dammy table
-  [0, 800, 1600, 3200, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //25 fu dammy table
-  [500, 1000, 2000, 3900, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //30 fu dammy table
-  [700, 1300, 2600, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //40 fu dammy table
-  [800, 1600, 3200, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //50 fu dammy table
-  [1000, 2000, 3900, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //60 fu dammy table
-  [1200, 2300, 4000, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //70 fu dammy table
-  [1300, 2600, 4000, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //80 fu dammy table
-  [1500, 2900, 4000, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //90 fu dammy table
-  [1600, 3200, 4000, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //100 fu dammy table
-  [1800, 3600, 4000, 4000, 4000, 6000, 6000, 8000, 8000, 8000, 12000, 12000, 16000], //110 fu dammy table
-];
-
-
-export const tsumoKoPointTable = [
-  [
-    [0, 0],
-    [400, 700],
-    [700, 1300],
-    [1300, 2600],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //20 fu tsumo
-  [
-    [0, 0],
-    [400, 800],
-    [800, 1600],
-    [1600, 3200],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //25 fu tsumo
-  [
-    [300, 500],
-    [500, 1000],
-    [1000, 2000],
-    [2000, 3900],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //30 fu tsumo
-  [
-    [400, 700],
-    [700, 1300],
-    [1300, 2600],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //40 fu tsumo
-  [
-    [400, 800],
-    [800, 1600],
-    [1600, 3200],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //50 fu tsumo
-  [
-    [500, 1000],
-    [1000, 2000],
-    [2000, 3900],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //60 fu tsumo
-  [
-    [600, 1200],
-    [1200, 2300],
-    [2000, 4000],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //70 fu tsumo
-  [
-    [700, 1300],
-    [1300, 2600],
-    [2000, 4000],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //80 fu tsumo
-  [
-    [800, 1500],
-    [1500, 2900],
-    [2000, 4000],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //90 fu tsumo
-  [
-    [800, 1600],
-    [1600, 3200],
-    [2000, 4000],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //100 fu tsumo
-  [
-    [900, 1800],
-    [1800, 3600],
-    [2000, 4000],
-    [2000, 4000],
-    [2000, 4000],
-    [3000, 6000],
-    [3000, 6000],
-    [4000, 8000],
-    [4000, 8000],
-    [4000, 8000],
-    [6000, 12000],
-    [6000, 12000],
-    [8000, 16000],
-  ], //110 fu tsumo
-];

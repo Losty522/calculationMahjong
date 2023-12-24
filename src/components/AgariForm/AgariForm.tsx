@@ -3,20 +3,25 @@ import { redirect } from "next/navigation";
 import {
   AGARI_WAY,
   PLAYER_INDEX,
-  ronKoPointTable,
-  ronOyaPointTable,
-  tsumoKoPointTable,
-  tsumoOyaPointTable,
   useAgariFormData,
   useFeildStatus,
   usePlayerStore,
 } from "../playerStore";
+import {
+  ronKoPointTable,
+  ronOyaPointTable,
+  tsumoKoPointTable,
+  tsumoOyaPointTable,
+} from "./agariTable";
+
 import { useEffect } from "react";
 import PointForm from "./PointForm";
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import AgariWay from "./AgariWay";
 import AgariPlayer from "./AgariPlayer";
 import AgariFrom from "./AgariFrom";
+import Link from "next/link";
+import { log } from "console";
 
 const AgariForm = () => {
   const agariData = useAgariFormData();
@@ -73,10 +78,12 @@ const AgariForm = () => {
           nextNumber++;
         }
       }
-      agariPlayerIndex = [...tempArray];
+      agariPlayerIndex = [...tempArray]; //arranged  agari player array
     }
 
+    //----------------------------------------------------------------
     // add agari point
+    //----------------------------------------------------------------
     if (agariData.agariWay[AGARI_WAY.RON]) {
       agariPlayerIndex.forEach((data, index) => {
         // check if the player is ko or oya
@@ -85,23 +92,33 @@ const AgariForm = () => {
             data,
             +ronOyaPointTable[agariData.agariData[data].fuIndex][
               agariData.agariData[data].han - 1
-            ] + (index == 0 ? fieldDataState.honba * 300 : 0) //add honba point *300
+            ] *
+              (agariData.agariData[agariPlayerIndex[index]].han >= 13
+                ? agariData.agariData[agariPlayerIndex[index]].yakumanNum
+                : 1) + //if yakuman, multiply yakumanNum
+              (index == 0 ? fieldDataState.honba * 300 : 0) + //add honba point *300. only first player can get this.
+              (index == 0 ? fieldDataState.chips * 1000 : 0) //add chips *1000. only first player can get this.
           );
         } else {
           playerDataState?.calculatedPoints(
             data,
             +ronKoPointTable[agariData.agariData[data].fuIndex][
               agariData.agariData[data].han - 1
-            ] +
+            ] *
+              (agariData.agariData[agariPlayerIndex[index]].han >= 13
+                ? agariData.agariData[agariPlayerIndex[index]].yakumanNum
+                : 1) + //if yakuman, multiply yakumanNum
               (index == 0 && fieldDataState != undefined
                 ? fieldDataState.honba * 300
-                : 0) //add honba point *300
+                : 0) + //add honba point *300
+              (index == 0 && fieldDataState != undefined
+                ? fieldDataState.chips * 1000
+                : 0) //add chips *1000. only first player can get this.
           );
         }
       });
     } else {
       // in case of tsumo
-
       agariPlayerIndex.forEach((data) => {
         if (data === fieldDataState?.oyaId) {
           playerDataState?.calculatedPoints(
@@ -109,26 +126,36 @@ const AgariForm = () => {
             tsumoOyaPointTable[agariData.agariData[data].fuIndex][
               agariData.agariData[data].han - 1
             ] *
-              3 + // oya tsumo each 3 players so multiply by 3
-              fieldDataState.honba * 300 //add honba point *300
+              3 *
+              (agariData.agariData[agariPlayerIndex[data]].han >= 13
+                ? agariData.agariData[agariPlayerIndex[data]].yakumanNum
+                : 1) + //if yakuman, multiply yakumanNum // oya tsumo each 3 players so multiply by 3
+              fieldDataState.honba * 300 + //add honba point *300
+              fieldDataState.chips * 1000 //add chips *1000
           );
         } else {
           playerDataState?.calculatedPoints(
             data,
-            tsumoKoPointTable[agariData.agariData[data].fuIndex][
+            (tsumoKoPointTable[agariData.agariData[data].fuIndex][
               agariData.agariData[data].han - 1
             ][0] *
               2 +
               tsumoKoPointTable[agariData.agariData[data].fuIndex][
                 agariData.agariData[data].han - 1
-              ][1] +
-              (fieldDataState != undefined ? fieldDataState.honba * 300 : 0) //add honba point *300
+              ][1]) *
+              (agariData.agariData[agariPlayerIndex[data]].han >= 13
+                ? agariData.agariData[agariPlayerIndex[data]].yakumanNum
+                : 1) + //if yakuman, multiply yakumanNum
+              (fieldDataState != undefined ? fieldDataState.honba * 300 : 0) + //add honba point *300
+              (fieldDataState != undefined ? fieldDataState.chips * 1000 : 0) //add honba point *300
           );
         }
       });
     }
-
+    //----------------------------------------------------------------
     // reduce points from-players
+    //----------------------------------------------------------------
+
     if (agariData.agariWay[AGARI_WAY.RON]) {
       // loop per agari players
       agariPlayerIndex.forEach((data, index) => {
@@ -137,7 +164,10 @@ const AgariForm = () => {
             fromPlayerIndex[0],
             -ronOyaPointTable[agariData.agariData[data].fuIndex][
               agariData.agariData[data].han - 1
-            ] -
+            ] *
+              (agariData.agariData[agariPlayerIndex[index]].han >= 13
+                ? agariData.agariData[agariPlayerIndex[index]].yakumanNum
+                : 1) - //if yakuman, multiply yakumanNum
               (index == 0 && fieldDataState != undefined
                 ? fieldDataState.honba * 300
                 : 0) //add honba point *300
@@ -147,8 +177,11 @@ const AgariForm = () => {
             fromPlayerIndex[0],
             -ronKoPointTable[agariData.agariData[data].fuIndex][
               agariData.agariData[data].han - 1
-            ] -
-              (index == 0 && fieldDataState != undefined
+            ] *
+              (agariData.agariData[agariPlayerIndex[index]].han >= 13
+                ? agariData.agariData[agariPlayerIndex[index]].yakumanNum
+                : 1) - //if yakuman, multiply yakumanNum
+              -(index == 0 && fieldDataState != undefined
                 ? fieldDataState.honba * 300
                 : 0) //add honba point *300
           );
@@ -164,7 +197,10 @@ const AgariForm = () => {
             data,
             -tsumoOyaPointTable[
               agariData.agariData[agariPlayerIndex[0]].fuIndex
-            ][agariData.agariData[agariPlayerIndex[0]].han - 1] - // oya tsumo each 3 players so multiply by 3
+            ][agariData.agariData[agariPlayerIndex[0]].han - 1] *
+              (agariData.agariData[agariPlayerIndex[0]].han >= 13
+                ? agariData.agariData[agariPlayerIndex[0]].yakumanNum
+                : 1) - //if yakuman, multiply yakumanNum // oya tsumo each 3 players so multiply by 3
               (fieldDataState != undefined ? fieldDataState.honba * 100 : 0) //add honba point *100
           );
         });
@@ -176,7 +212,10 @@ const AgariForm = () => {
               data,
               -tsumoKoPointTable[
                 agariData.agariData[agariPlayerIndex[0]].fuIndex
-              ][agariData.agariData[agariPlayerIndex[0]].han - 1][1] -
+              ][agariData.agariData[agariPlayerIndex[0]].han - 1][1] *
+                (agariData.agariData[agariPlayerIndex[0]].han >= 13
+                  ? agariData.agariData[agariPlayerIndex[0]].yakumanNum
+                  : 1) -
                 (fieldDataState != undefined ? fieldDataState.honba * 100 : 0) //add honba point *100
             ); // according to oya point
           } else {
@@ -184,7 +223,10 @@ const AgariForm = () => {
               data,
               -tsumoKoPointTable[
                 agariData.agariData[agariPlayerIndex[0]].fuIndex
-              ][agariData.agariData[agariPlayerIndex[0]].han - 1][0] -
+              ][agariData.agariData[agariPlayerIndex[0]].han - 1][0] *
+                (agariData.agariData[agariPlayerIndex[0]].han >= 13
+                  ? agariData.agariData[agariPlayerIndex[0]].yakumanNum
+                  : 1) -
                 (fieldDataState != undefined ? fieldDataState.honba * 100 : 0) //add honba point *100
             ); // according to oya point
           }
@@ -192,9 +234,30 @@ const AgariForm = () => {
       }
     }
 
+    //----------------------------------------------------------------
+    // update feild status
+    //----------------------------------------------------------------
+    fieldDataState?.changeChips(-fieldDataState?.chips); //reset chips into 0
+    playerDataState?.resetAllRiich(); //reset all riich status into false
+
+    //check if oyaPlayer is win or not
+    if (
+      agariPlayerIndex.find((number) => number === fieldDataState?.oyaId) !==
+      undefined
+    ) {
+      //oya player is win
+      fieldDataState?.changeHonba(1); //add 1 into honba point
+      //round is not changed.
+    } else {
+      //oya player is not win
+      fieldDataState?.changeHonba(-fieldDataState?.honba); //reset honba into 0
+      fieldDataState?.changeRound(1); //add 1 into round. move to next round
+    }
+
     // fieldDataState?.changeNextOya();
     console.log(agariPlayerIndex);
     console.log(fromPlayerIndex);
+    return;
   };
 
   const updateField = async (formData: FormData) => {
@@ -295,6 +358,12 @@ const AgariForm = () => {
       <br />
       <br />
       <button type="submit">submit</button>
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <Link href="/match">Cancel</Link>
     </form>
   );
 };

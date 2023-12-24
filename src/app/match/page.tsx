@@ -1,8 +1,6 @@
 import Field from "@/components/Field";
 
-type Props = {};
-
-const page = (props: Props) => {
+const page = () => {
   return (
     <>
       <div>match page</div>
