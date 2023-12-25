@@ -145,6 +145,7 @@ export type FeildStatusType = {
   changeRound:(number:number)=>void;
   changeHonba:(number:number)=>void;
   changeChips:(number:number)=>void;
+  changeOyaId:(number:number)=>void;
 }
     
 
@@ -167,6 +168,7 @@ persist(
   changeRound:(number:number)=>set((state)=>(state.round<15?{round:state.round + number}:{})),
   changeHonba:(number:number)=>set((state)=>({honba:state.honba + number})),
   changeChips:(number:number)=>set((state)=>({chips:state.chips + number})),
+  changeOyaId:(number:number)=>set(()=>({oyaId:number})),
   changeAgariMenue:(bool:boolean)=>set((state)=>({agariMenue:bool})),
   changeNextOya:()=>set((state)=>{
     if(state.oyaId == 3){
@@ -191,6 +193,7 @@ export interface playerDataInterface {
   point: number,
   riichi:boolean,
   rank:number,
+  startPositionFlag:boolean[]
 }
 
 export type playerStoreType = {
@@ -202,8 +205,16 @@ export type playerStoreType = {
   changeRiici:(playerId: number,bool:boolean)=>void;
   resetAllRiich:()=>void;
   updateRanking:()=>void;
-
+  updateStartPosition:(positionArray:number[])=>void;
+  updatePlayerStartPositionFlag: (playerId: number, positionIndex:number)=>void;
 }
+export enum POSITION_INDEX {
+  EAST=0,
+  SOUTH=1,
+  WEST=2,
+  NORTH=3,
+}
+
 
 const initialPlayerArrObj:playerDataInterface[] = [
   {
@@ -211,14 +222,16 @@ const initialPlayerArrObj:playerDataInterface[] = [
     playerName: "Player1",
     point: 25000,
     riichi:false,
-    rank:0
+    rank:0,
+    startPositionFlag:[true,false,false,false]
   },
   {
     id:1,
     playerName: "Player2",
     point: 25000,
     riichi:false,
-    rank:0
+    rank:0,
+    startPositionFlag:[false,true,false,false]
   },
 
   {
@@ -226,20 +239,22 @@ const initialPlayerArrObj:playerDataInterface[] = [
     playerName: "Player3",
     point: 25000,
     riichi:false,
-    rank:0
+    rank:0,
+    startPositionFlag:[false,false,true,false]
   },
   {
     id:3,
     playerName: "Player4",
     point: 25000,
     riichi:false,
-    rank:0
+    rank:0,
+    startPositionFlag:[false,false,false,true]
   },
 ]
 
 const initalWholeObj = {
   playerData:[...initialPlayerArrObj],
-  startPositonId:[3,1,0,2],
+  startPositonId:[0,1,2,3],
   playerOrder:[0,1,2,3]
 }
 
@@ -273,7 +288,7 @@ export const usePlayerStore = create<playerStoreType>()(
        const tempOrderArr:number[] = [];
        tempArrObj.sort(function(a,b){
         if(a.point === b.point){
-          return state.startPositonId[a.id] - state.startPositonId[b.id];
+          return state.startPositonId.indexOf(a.id) - state.startPositonId.indexOf(b.id);
         } 
         return b.point - a.point
        })
@@ -281,7 +296,7 @@ export const usePlayerStore = create<playerStoreType>()(
         tempOrderArr.push(data.id);
        })
 
-       console.log(tempArrObj)
+       
        const updatePlayerData = state.playerData.map((data)=>{
         const newIndex = tempArrObj.findIndex(player=>player.id === data.id);
         return {...data,rank: newIndex+1}
@@ -290,7 +305,18 @@ export const usePlayerStore = create<playerStoreType>()(
        return {playerData:updatePlayerData,playerOrder:tempOrderArr}
 
       }),  
-      
+      updateStartPosition:(positionArray:number[])=>set(()=>({startPositonId:positionArray})),
+      updatePlayerStartPositionFlag: (playerId: number, positionIndex:number) =>
+      set((state) => {
+        const tempFlagArray = [false,false,false,false];
+        tempFlagArray[positionIndex]= true;
+        const updatePlayerData = state.playerData.map((data, dataIndex) =>
+        dataIndex === playerId
+          ? { ...data, startPositionFlag: tempFlagArray }
+          : data
+        )
+        return {playerData:updatePlayerData}
+      }),
     }),
     {
       name: "playerStoreData",

@@ -1,25 +1,15 @@
 "use client";
+import MatchMaking from "@/components/matchMaking/MatchMaking";
+import { usePlayerStore } from "@/components/playerStore";
+import { useGetFromStore } from "@/hooks/zustandHooks";
 import Link from "next/link";
 import React from "react";
 
 const page = () => {
-  const handleResetStrage = () => {
-    // localStorage.removeItem("playerStoreData");
-    // localStorage.removeItem("FeildStatus");
-  };
-
   return (
     <>
       <div>Mach making page</div>
-      <Link href="/match">
-        <button
-          onClick={() => {
-            handleResetStrage();
-          }}
-        >
-          start match
-        </button>
-      </Link>
+      <MatchMaking />
     </>
   );
 };

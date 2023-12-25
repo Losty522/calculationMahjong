@@ -5,13 +5,11 @@ import Player from "./Player";
 import { PLAYER_INDEX, useFeildStatus, usePlayerStore } from "./playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 const Field = () => {
   const feildStatus = useGetFromStore(useFeildStatus, (state) => state);
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
 
-  const router = useRouter();
   const handleResetStrage = () => {
     feildStatus?.initializeData(); //reset all data
     playerDataState?.initializeData(); //reset all data
@@ -78,6 +76,7 @@ const Field = () => {
         changeHonba
       </button>
 
+      <div>StartPosition:{playerDataState?.startPositonId}</div>
       <div>Ranking:{playerDataState.playerOrder}</div>
       <div>round:{feildStatus?.round}</div>
       <div>roundDisplay:{feildStatus?.displayRound[feildStatus?.round]}</div>
@@ -85,18 +84,12 @@ const Field = () => {
       <div>Honba:{feildStatus?.honba}</div>
       <div>OyaId:{feildStatus?.oyaId}</div>
       <div>Chips:{feildStatus?.chips}</div>
-      <Player
-        playerDataObj={playerDataState?.playerData[PLAYER_INDEX.PLAYER1]}
-      />
-      <Player
-        playerDataObj={playerDataState?.playerData[PLAYER_INDEX.PLAYER2]}
-      />
-      <Player
-        playerDataObj={playerDataState?.playerData[PLAYER_INDEX.PLAYER3]}
-      />
-      <Player
-        playerDataObj={playerDataState?.playerData[PLAYER_INDEX.PLAYER4]}
-      />
+
+      {playerDataState?.startPositonId.map((data) => (
+        <div key={playerDataState?.playerData[data].id}>
+          <Player playerDataObj={playerDataState?.playerData[data]} />
+        </div>
+      ))}
     </>
   );
 };
