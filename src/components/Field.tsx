@@ -41,6 +41,17 @@ const Field = () => {
         <button className="border border-black">Draw</button>
       </Link>
 
+      <Link href="/editMatchBonus">
+        <button
+          className="border border-black"
+          onClick={() => {
+            playerDataState.updateRanking();
+          }}
+        >
+          Finish
+        </button>
+      </Link>
+
       <button
         className="border border-black"
         onClick={() => {

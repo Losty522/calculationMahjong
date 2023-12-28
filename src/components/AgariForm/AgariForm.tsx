@@ -265,6 +265,7 @@ const AgariForm = () => {
     calculatePlayersPoint();
     // console.log(formData.get("Fu")?.valueOf());
     // console.log(agariData.agariPlayer);
+    playerDataState?.updateRanking();
     redirect("/match");
   };
 

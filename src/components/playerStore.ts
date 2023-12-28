@@ -195,6 +195,7 @@ export interface playerDataInterface {
   rank:number,
   startPositionFlag:boolean[]
   tenpai:boolean,
+  resultPoint:number,
 }
 
 export type playerStoreType = {
@@ -209,6 +210,7 @@ export type playerStoreType = {
   updateStartPosition:(positionArray:number[])=>void;
   updatePlayerStartPositionFlag: (playerId: number, positionIndex:number)=>void;
   updateTenpai: (playerId: number, bool: boolean) =>void;
+  updateResultPoints: (playerId: number, number: number) =>void;
 }
 export enum POSITION_INDEX {
   EAST=0,
@@ -227,6 +229,7 @@ const initialPlayerArrObj:playerDataInterface[] = [
     rank:0,
     startPositionFlag:[true,false,false,false],
     tenpai:false,
+    resultPoint:0,
   },
   {
     id:1,
@@ -236,6 +239,7 @@ const initialPlayerArrObj:playerDataInterface[] = [
     rank:0,
     startPositionFlag:[false,true,false,false],
     tenpai:false,
+    resultPoint:0,
   },
 
   {
@@ -246,6 +250,7 @@ const initialPlayerArrObj:playerDataInterface[] = [
     rank:0,
     startPositionFlag:[false,false,true,false],
     tenpai:false,
+    resultPoint:0,
   },
   {
     id:3,
@@ -255,6 +260,7 @@ const initialPlayerArrObj:playerDataInterface[] = [
     rank:0,
     startPositionFlag:[false,false,false,true],
     tenpai:false,
+    resultPoint:0,
   },
 ]
 
@@ -262,6 +268,7 @@ const initalWholeObj = {
   playerData:[...initialPlayerArrObj],
   startPositonId:[0,1,2,3],
   playerOrder:[0,1,2,3]
+
 }
 
 export const usePlayerStore = create<playerStoreType>()(
@@ -331,6 +338,15 @@ export const usePlayerStore = create<playerStoreType>()(
             : data
         ),
       })),
+      updateResultPoints: (playerId: number, number: number) =>
+      set((state) => ({
+        playerData: state.playerData.map((data, dataIndex) =>
+          dataIndex === playerId
+            ? { ...data, resultPoint: number }
+            : data
+        ),
+      })),
+
 
     }),
     {
