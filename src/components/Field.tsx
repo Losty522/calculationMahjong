@@ -37,6 +37,10 @@ const Field = () => {
         </button>
       </Link>
 
+      <Link href="/draw">
+        <button className="border border-black">Draw</button>
+      </Link>
+
       <button
         className="border border-black"
         onClick={() => {
