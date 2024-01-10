@@ -31,11 +31,11 @@ const PositionButton = (props: Props) => {
         Name: {playerDataState?.playerData[props.playerId].playerName}
         <input
           type="checkbox"
-          checked={
+          checked={Boolean(
             playerDataState?.playerData[props.playerId].startPositionFlag[
               POSITION_INDEX.EAST
             ]
-          }
+          )}
           onChange={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.EAST)
           }
@@ -45,11 +45,11 @@ const PositionButton = (props: Props) => {
       <label htmlFor="">
         <input
           type="checkbox"
-          checked={
+          checked={Boolean(
             playerDataState?.playerData[props.playerId].startPositionFlag[
               POSITION_INDEX.SOUTH
             ]
-          }
+          )}
           onChange={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.SOUTH)
           }
@@ -59,11 +59,11 @@ const PositionButton = (props: Props) => {
       <label htmlFor="">
         <input
           type="checkbox"
-          checked={
+          checked={Boolean(
             playerDataState?.playerData[props.playerId].startPositionFlag[
               POSITION_INDEX.WEST
             ]
-          }
+          )}
           onChange={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.WEST)
           }
@@ -74,11 +74,11 @@ const PositionButton = (props: Props) => {
       <label htmlFor="">
         <input
           type="checkbox"
-          checked={
+          checked={Boolean(
             playerDataState?.playerData[props.playerId].startPositionFlag[
               POSITION_INDEX.NORTH
             ]
-          }
+          )}
           onChange={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.NORTH)
           }

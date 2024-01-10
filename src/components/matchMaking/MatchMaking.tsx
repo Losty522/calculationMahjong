@@ -37,6 +37,7 @@ const MatchMaking = () => {
   return (
     <>
       <form action="">
+        <Link href="/">Cancel</Link>
         <button
           type="button"
           className="border border-black mr-3"

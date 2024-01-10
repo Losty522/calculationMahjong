@@ -2,6 +2,7 @@
 import React from "react";
 import { usePlayerStore } from "../playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
+import Link from "next/link";
 
 const MatchResult = () => {
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
@@ -19,6 +20,7 @@ const MatchResult = () => {
           </div>
         </div>
       ))}
+      <Link href={"/"}>Go Home</Link>
     </>
   );
 };
