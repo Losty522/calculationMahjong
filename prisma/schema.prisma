@@ -2,22 +2,38 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["mongodb"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-// model account{
+model user {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userName String @unique
+}
 
-// }
+// MatchResultモデル
+model MatchResult {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  timestamp   Int
+  returnFlag  Boolean
+  bonusFlag   Int
+  customBonus Int[]
+  playerOrder Int[]
+  playerData  PlayerData[]
+}
 
-// model user{
-
-// }
-
-// model matchData{
-
-// }
+// PlayerDataモデル
+model PlayerData {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  point         Int
+  resultPoint   Int
+  userId        Int
+  userName      String
+  matchResult   MatchResult @relation(fields: [matchResultId], references: [id])
+  matchResultId String
+}

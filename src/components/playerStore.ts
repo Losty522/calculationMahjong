@@ -190,6 +190,7 @@ persist(
 export interface playerDataInterface {
   id:number,
   playerName: string,
+  userId: string,
   point: number,
   riichi:boolean,
   rank:number,
@@ -211,6 +212,7 @@ export type playerStoreType = {
   updatePlayerStartPositionFlag: (playerId: number, positionIndex:number)=>void;
   updateTenpai: (playerId: number, bool: boolean) =>void;
   updateResultPoints: (playerId: number, number: number) =>void;
+  updateNameAndUserId: (playerId: number, playerName:string,userId:string) =>void;
 }
 export enum POSITION_INDEX {
   EAST=0,
@@ -223,7 +225,8 @@ export enum POSITION_INDEX {
 const initialPlayerArrObj:playerDataInterface[] = [
   {
     id:0,
-    playerName: "Player1",
+    playerName: "",
+    userId:"",
     point: 25000,
     riichi:false,
     rank:0,
@@ -233,7 +236,8 @@ const initialPlayerArrObj:playerDataInterface[] = [
   },
   {
     id:1,
-    playerName: "Player2",
+    playerName: "",
+    userId:"",
     point: 25000,
     riichi:false,
     rank:0,
@@ -244,7 +248,8 @@ const initialPlayerArrObj:playerDataInterface[] = [
 
   {
     id:2,
-    playerName: "Player3",
+    playerName: "",
+    userId:"",
     point: 25000,
     riichi:false,
     rank:0,
@@ -254,7 +259,8 @@ const initialPlayerArrObj:playerDataInterface[] = [
   },
   {
     id:3,
-    playerName: "Player4",
+    playerName: "",
+    userId:"",
     point: 25000,
     riichi:false,
     rank:0,
@@ -344,6 +350,16 @@ export const usePlayerStore = create<playerStoreType>()(
           dataIndex === playerId
             ? { ...data, resultPoint: number }
             : data
+        ),
+      })),
+      updateNameAndUserId: (playerId: number, playerName:string,userId:string) =>
+      set((state) => ({
+        playerData: state.playerData.map((data, dataIndex) =>
+          dataIndex === playerId
+            ? { ...data, playerName: playerName, userId: userId }
+            : userId === data.userId //if userId is already set, that player data will be defaulted
+              ? {...data,playerName: "", userId: ""}
+              : data
         ),
       })),
 

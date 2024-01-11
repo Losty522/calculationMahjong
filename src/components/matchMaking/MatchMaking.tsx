@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import {
   PLAYER_INDEX,
   POSITION_INDEX,
@@ -8,14 +9,27 @@ import {
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import Link from "next/link";
 import PositionButton from "./PositionButton";
+import { redirect, useRouter } from "next/navigation";
 
 const MatchMaking = () => {
+  const router = useRouter();
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const fieldDataState = useGetFromStore(useFeildStatus, (state) => state);
+  const [message, setMessage] = useState("");
   const displayDirection = ["East", "South", "West", "North"];
   const handleResetStrage = () => {
     playerDataState?.updateRanking(); //update ranking
-    fieldDataState?.changeOyaId(Number(playerDataState?.startPositonId[0])); //update OyaId
+    fieldDataState?.changeOyaId(Number(playerDataState?.startPositonId[0])); //update OyaId\
+    if (
+      playerDataState?.playerData[PLAYER_INDEX.PLAYER1].userId &&
+      playerDataState?.playerData[PLAYER_INDEX.PLAYER2].userId &&
+      playerDataState?.playerData[PLAYER_INDEX.PLAYER3].userId &&
+      playerDataState?.playerData[PLAYER_INDEX.PLAYER4].userId
+    ) {
+      router.push("/match");
+    } else {
+      setMessage("please set all players names");
+    }
   };
 
   const handleShufflePosition = () => {
@@ -36,7 +50,7 @@ const MatchMaking = () => {
 
   return (
     <>
-      <form action="">
+      <div>
         <Link href="/">Cancel</Link>
         <button
           type="button"
@@ -47,23 +61,23 @@ const MatchMaking = () => {
         >
           change positon randomly
         </button>
-        <Link href="/match">
-          <button
-            className="border border-black mr-3"
-            onClick={() => {
-              handleResetStrage();
-            }}
-          >
-            start match
-          </button>
-        </Link>
 
+        <button
+          className="border border-black mr-3"
+          type="button"
+          onClick={() => {
+            handleResetStrage();
+          }}
+        >
+          Start Match
+        </button>
+        <p className="text-red-600">{message}</p>
         <br />
         <PositionButton playerId={PLAYER_INDEX.PLAYER1} />
         <PositionButton playerId={PLAYER_INDEX.PLAYER2} />
         <PositionButton playerId={PLAYER_INDEX.PLAYER3} />
         <PositionButton playerId={PLAYER_INDEX.PLAYER4} />
-      </form>
+      </div>
     </>
   );
 };

@@ -1,4 +1,5 @@
 "use client";
+import CreateUser from "@/components/matchMaking/CreateUser";
 import MatchMaking from "@/components/matchMaking/MatchMaking";
 import { usePlayerStore } from "@/components/playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
@@ -9,6 +10,7 @@ const page = () => {
   return (
     <>
       <div>Mach making page</div>
+      <CreateUser />
       <MatchMaking />
     </>
   );

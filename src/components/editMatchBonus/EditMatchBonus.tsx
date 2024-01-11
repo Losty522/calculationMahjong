@@ -5,6 +5,54 @@ import { useGetFromStore } from "@/hooks/zustandHooks";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
+const player = {
+  id: 0, //auto increment
+  name: "player001",
+};
+
+const matchResultObj = {
+  id: 0, //autoincerement
+  timestamp: 20220303,
+  playerorder: [0, 2, 1, 3],
+  playerData: [
+    {
+      id: 0, //autoincerement
+      positionId: 0,
+      point: 25000,
+      name: "player1",
+      resultPoint: 30,
+      playerModelObj: player,
+    },
+    {
+      id: 2, //autoincerement
+      positionId: 1,
+      point: 5000,
+      name: "player2",
+      resultPoint: 2,
+      playerModelObj: player,
+    },
+    {
+      id: 3, //autoincerement
+      positionId: 2,
+      point: 15000,
+      name: "player3",
+      resultPoint: -2,
+      playerModelObj: player,
+    },
+    {
+      id: 4, //autoincerement
+      positionId: 3,
+      point: 2000,
+      name: "player4",
+      resultPoint: -12,
+      playerModelObj: player,
+    },
+  ],
+  returnFlag: false,
+  bonusflag: 3,
+  customBonus: [5000, 2000],
+};
+
 const EditMatchBonus = () => {
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const [bonus, setBonus] = useState([0, 0, 0, 0]);
