@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getAllUsers } from "./userDataFunction";
+import { getAllUsers } from "../../app/action/matchMaking/userDataFunction";
 
 type Props = {
   playerId: 0 | 1 | 2 | 3;

@@ -1,6 +1,6 @@
 "use clitent";
 import React, { useState } from "react";
-import { addUser } from "./userDataFunction";
+import { addUser } from "../../app/action/matchMaking/userDataFunction";
 
 const CreateUser = () => {
   const [newUserName, setNewUserName] = useState("");
