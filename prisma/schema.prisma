@@ -16,23 +16,22 @@ model user {
   userName String @unique
 }
 
-// MatchResultモデル
+// MatchResult model
 model MatchResult {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   timestamp   Int
   returnFlag  Boolean
-  bonusFlag   Int
+  placeBonus  Int[]
   customBonus Int[]
-  playerOrder Int[]
   playerData  PlayerData[]
 }
 
-// PlayerDataモデル
+// PlayerData model
 model PlayerData {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   point         Int
-  resultPoint   Int
-  userId        Int
+  resultPoint   Float
+  userId        String
   userName      String
   matchResult   MatchResult @relation(fields: [matchResultId], references: [id])
   matchResultId String

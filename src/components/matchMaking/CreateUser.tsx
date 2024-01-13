@@ -1,8 +1,12 @@
 "use clitent";
 import React, { useState } from "react";
 import { addUser } from "../../app/action/matchMaking/userDataFunction";
+import FinishedMatch from "../FinishedMatch";
+import { usePlayerStore } from "../playerStore";
+import { useGetFromStore } from "@/hooks/zustandHooks";
 
 const CreateUser = () => {
+  const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const [newUserName, setNewUserName] = useState("");
   const [message, setMessage] = useState("");
   const submitUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,6 +22,11 @@ const CreateUser = () => {
     }
     return;
   };
+  //this match is already finished, go back to the home.
+  if (playerDataState?.isMatchFinished) {
+    return <FinishedMatch />;
+  }
+
   return (
     <div>
       <div>CreateUser</div>

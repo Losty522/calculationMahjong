@@ -1,66 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { PLAYER_INDEX, usePlayerStore } from "../playerStore";
+import { usePlayerStore } from "../playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { addMatchResult } from "@/app/action/matchResult/matchDataFunction";
+import FinishedMatch from "../FinishedMatch";
 
-const player = {
-  id: 0, //auto increment
-  name: "player001",
-};
-
-const matchResultObj = {
-  id: 0, //autoincerement
-  timestamp: 20220303,
-  playerorder: [0, 2, 1, 3],
-  playerData: [
-    {
-      id: 0, //autoincerement
-      positionId: 0,
-      point: 25000,
-      name: "player1",
-      resultPoint: 30,
-      playerModelObj: player,
-    },
-    {
-      id: 2, //autoincerement
-      positionId: 1,
-      point: 5000,
-      name: "player2",
-      resultPoint: 2,
-      playerModelObj: player,
-    },
-    {
-      id: 3, //autoincerement
-      positionId: 2,
-      point: 15000,
-      name: "player3",
-      resultPoint: -2,
-      playerModelObj: player,
-    },
-    {
-      id: 4, //autoincerement
-      positionId: 3,
-      point: 2000,
-      name: "player4",
-      resultPoint: -12,
-      playerModelObj: player,
-    },
-  ],
-  returnFlag: false,
-  bonusflag: 3,
-  customBonus: [5000, 2000],
+export type resultObjType = {
+  timestamp: number;
+  returnFlag: boolean;
+  placeBonus: number[];
+  customBonus: number[];
+  PlayerData: {
+    point: number;
+    resultPoint: number;
+    userId: string;
+    userName: string;
+  }[];
 };
 
 const EditMatchBonus = () => {
+  const router = useRouter();
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const [bonus, setBonus] = useState([0, 0, 0, 0]);
   const [placeBonus, setPlaceBonus] = useState([0, 0, 0, 0]);
   const [customPlaceBonus, setCustomPlaceBonus] = useState([5000, 10000]);
   const [customFlag, setCustomFlag] = useState(false);
   const [return3000Flag, setReturn3000Flag] = useState(false);
-
   enum PLACE_INDEX {
     CASE_NONE = 0,
     CASE05_10 = 1,
@@ -104,31 +71,78 @@ const EditMatchBonus = () => {
     handlePlaceBonus(PLACE_INDEX.CASE_CUSTOM);
   }, [customPlaceBonus, customFlag]);
 
-  const submitBonus = async (formData: FormData) => {
+  const submitBonus = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const timestamp = Math.floor(new Date().getTime() / 1000);
+    const sendObject: resultObjType = {
+      timestamp: timestamp,
+      returnFlag: return3000Flag,
+      placeBonus: placeBonus,
+      customBonus: customPlaceBonus,
+      PlayerData: [
+        {
+          point: 0,
+          resultPoint: 0,
+          userId: "",
+          userName: "",
+        },
+        {
+          point: 0,
+          resultPoint: 0,
+          userId: "",
+          userName: "",
+        },
+
+        {
+          point: 0,
+          resultPoint: 0,
+          userId: "",
+          userName: "",
+        },
+        {
+          point: 0,
+          resultPoint: 0,
+          userId: "",
+          userName: "",
+        },
+      ],
+    };
     playerDataState?.playerOrder.forEach((data, index) => {
-      playerDataState.calculatedPoints(data, bonus[index] + placeBonus[index]);
+      const totalBonusPoint = bonus[index] + placeBonus[index]; //bonus + placeBounus point
+      playerDataState.calculatedPoints(data, totalBonusPoint); //add bonus point
 
       //update result point
       const totalPoint =
         playerDataState.playerData[data].point +
         bonus[index] +
         placeBonus[index];
-      if (return3000Flag) {
-        //in case of return 30000
-        playerDataState.updateResultPoints(data, (totalPoint - 30000) / 1000);
-      } else {
-        playerDataState.updateResultPoints(data, (totalPoint - 25000) / 1000);
-      }
+      let resultPoint; //convert from total point into result point :in case of return 30000, 35000 -> 5pt
+
+      resultPoint = (totalPoint - 25000) / 1000; //reduce initial point
+
+      playerDataState.updateResultPoints(data, resultPoint);
+      //save result data into tempData for saving database later
+      sendObject.PlayerData[index].point = totalPoint;
+      sendObject.PlayerData[index].resultPoint = resultPoint;
+      sendObject.PlayerData[index].userId =
+        playerDataState.playerData[data].userId;
+      sendObject.PlayerData[index].userName =
+        playerDataState.playerData[data].playerName;
     });
 
-    //save mach result
-    //yet
-
-    redirect("/matchResult");
+    await addMatchResult(sendObject);
+    playerDataState?.updateIsMatchFinished(true);
+    router.push("/matchResult");
   };
 
+  //this match is already finished, go back to the home.
+  if (playerDataState?.isMatchFinished) {
+    return <FinishedMatch />;
+  }
+
   return (
-    <form action={submitBonus}>
+    <form onSubmit={submitBonus}>
       {playerDataState?.playerOrder.map((data, index) => (
         <div key={data} className="flex">
           <div>

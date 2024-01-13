@@ -14,7 +14,7 @@ import {
   tsumoOyaPointTable,
 } from "./agariTable";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PointForm from "./PointForm";
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import AgariWay from "./AgariWay";
@@ -27,6 +27,7 @@ const AgariForm = () => {
   const agariData = useAgariFormData();
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const fieldDataState = useGetFromStore(useFeildStatus, (state) => state);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     agariData.initializeData(); //initialize agaridata everytime
@@ -48,6 +49,11 @@ const AgariForm = () => {
       fromPlayerIndex = agariData.agariFrom
         .map((data, index) => (data ? index : -1))
         .filter((index) => index !== -1);
+    }
+    //if agari or from player index is 0, return and show error message
+    if (!agariPlayerIndex.length || !fromPlayerIndex.length) {
+      setMessage("Please select both agari and from player");
+      return false;
     }
 
     //agari players more than 2 players and honba is not 0, then arrange array
@@ -181,7 +187,7 @@ const AgariForm = () => {
               (agariData.agariData[agariPlayerIndex[index]].han >= 13
                 ? agariData.agariData[agariPlayerIndex[index]].yakumanNum
                 : 1) - //if yakuman, multiply yakumanNum
-              -(index == 0 && fieldDataState != undefined
+              (index == 0 && fieldDataState != undefined
                 ? fieldDataState.honba * 300
                 : 0) //add honba point *300
           );
@@ -257,14 +263,14 @@ const AgariForm = () => {
     // fieldDataState?.changeNextOya();
     console.log(agariPlayerIndex);
     console.log(fromPlayerIndex);
-    return;
+    return true;
   };
 
   const updateField = async (formData: FormData) => {
-    console.log("submit");
-    calculatePlayersPoint();
-    // console.log(formData.get("Fu")?.valueOf());
-    // console.log(agariData.agariPlayer);
+    const isCalculated = calculatePlayersPoint();
+    if (!isCalculated) {
+      return;
+    }
     playerDataState?.updateRanking();
     redirect("/match");
   };
@@ -358,7 +364,8 @@ const AgariForm = () => {
       <br />
       <br />
       <br />
-      <button type="submit">submit</button>
+      <button type="submit">OK</button>
+      <p className="text-red-600">{message}</p>
       <br />
       <br />
       <br />

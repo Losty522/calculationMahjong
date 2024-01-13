@@ -5,6 +5,7 @@ import Player from "./Player";
 import { PLAYER_INDEX, useFeildStatus, usePlayerStore } from "./playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import { useEffect } from "react";
+import FinishedMatch from "./FinishedMatch";
 
 const Field = () => {
   const feildStatus = useGetFromStore(useFeildStatus, (state) => state);
@@ -23,7 +24,10 @@ const Field = () => {
   const handleAgari = () => {
     // next create agari functiona
   };
-
+  //this match is already finished, go back to the home.
+  if (playerDataState?.isMatchFinished) {
+    return <FinishedMatch />;
+  }
   return (
     <>
       <Link href="/agariForm">

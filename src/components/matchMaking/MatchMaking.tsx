@@ -9,7 +9,7 @@ import {
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import Link from "next/link";
 import PositionButton from "./PositionButton";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const MatchMaking = () => {
   const router = useRouter();
@@ -47,6 +47,11 @@ const MatchMaking = () => {
       playerDataState.updatePlayerStartPositionFlag(data, index); //data is position, index is positon 0=east,1=south,2=West=,3=North
     });
   };
+
+  //this match is already finished, go back to the home.
+  if (playerDataState?.isMatchFinished) {
+    return;
+  }
 
   return (
     <>

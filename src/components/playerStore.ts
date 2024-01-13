@@ -202,7 +202,8 @@ export interface playerDataInterface {
 export type playerStoreType = {
   playerData:playerDataInterface[];
   startPositonId:number[];
-  playerOrder:number[]
+  playerOrder:number[];
+  isMatchFinished:boolean;
   initializeData:()=>void;
   calculatedPoints:(playerId:number,number:number) => void;
   changeRiici:(playerId: number,bool:boolean)=>void;
@@ -213,6 +214,7 @@ export type playerStoreType = {
   updateTenpai: (playerId: number, bool: boolean) =>void;
   updateResultPoints: (playerId: number, number: number) =>void;
   updateNameAndUserId: (playerId: number, playerName:string,userId:string) =>void;
+  updateIsMatchFinished:(flag:boolean)=>void;
 }
 export enum POSITION_INDEX {
   EAST=0,
@@ -273,7 +275,8 @@ const initialPlayerArrObj:playerDataInterface[] = [
 const initalWholeObj = {
   playerData:[...initialPlayerArrObj],
   startPositonId:[0,1,2,3],
-  playerOrder:[0,1,2,3]
+  playerOrder:[0,1,2,3],
+  isMatchFinished:false,
 
 }
 
@@ -362,6 +365,7 @@ export const usePlayerStore = create<playerStoreType>()(
               : data
         ),
       })),
+      updateIsMatchFinished:(flag:boolean)=>set(()=>({isMatchFinished:flag})),
 
 
     }),
