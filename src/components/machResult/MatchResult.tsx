@@ -1,11 +1,15 @@
 "use client";
-import React from "react";
 import { usePlayerStore } from "../playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import Link from "next/link";
 
 const MatchResult = () => {
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
+  if (!playerDataState?.isMatchFinished) {
+    //change matchFinished flag to true.
+    playerDataState?.updateIsMatchFinished(true);
+  }
+
   return (
     <>
       {playerDataState?.playerOrder.map((data, index) => (

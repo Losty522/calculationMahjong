@@ -132,7 +132,6 @@ const EditMatchBonus = () => {
     });
 
     await addMatchResult(sendObject);
-    playerDataState?.updateIsMatchFinished(true);
     router.push("/matchResult");
   };
 

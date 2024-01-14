@@ -1,10 +1,6 @@
 "use client";
 import Link from "next/link";
-import {
-  useAgariFormData,
-  useFeildStatus,
-  usePlayerStore,
-} from "./playerStore";
+import { useFeildStatus, usePlayerStore } from "./playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
 
 const BeginNewMatchButton = () => {
