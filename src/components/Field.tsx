@@ -56,47 +56,6 @@ const Field = () => {
         </button>
       </Link>
 
-      <button
-        className="border border-black"
-        onClick={() => {
-          handleResetStrage();
-        }}
-      >
-        reset
-      </button>
-
-      <button
-        className="border border-black"
-        onClick={() => {
-          playerDataState.updateRanking();
-        }}
-      >
-        upDate rank
-      </button>
-
-      <br />
-
-      <button
-        className="border border-black"
-        onClick={() => {
-          feildStatus?.changeRound(1);
-        }}
-      >
-        changeRound
-      </button>
-
-      <br />
-      <br />
-      <button
-        onClick={() => {
-          feildStatus?.changeHonba(1);
-        }}
-      >
-        changeHonba
-      </button>
-
-      <div>StartPosition:{playerDataState?.startPositonId}</div>
-      <div>Ranking:{playerDataState.playerOrder}</div>
       <div>round:{feildStatus?.round}</div>
       <div>roundDisplay:{feildStatus?.displayRound[feildStatus?.round]}</div>
 

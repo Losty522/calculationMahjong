@@ -8,7 +8,7 @@ import { useGetFromStore } from "@/hooks/zustandHooks";
 const CreateUser = () => {
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const [newUserName, setNewUserName] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(" ");
   const submitUser = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
@@ -17,7 +17,7 @@ const CreateUser = () => {
       setMessage("created new user successfully");
       setNewUserName("");
     } catch (error) {
-      setMessage("Error creating user,your name is already in use");
+      setMessage("Error,your name is already in use");
       console.log(error);
     }
     return;
@@ -28,21 +28,26 @@ const CreateUser = () => {
   }
 
   return (
-    <div>
-      <div>CreateUser</div>
-      <form onSubmit={submitUser}>
-        <label htmlFor="">
-          userName:
-          <input
-            name="username"
-            type="text"
-            value={newUserName}
-            onChange={(e) => {
-              setNewUserName(e.target.value);
-            }}
-          />
-        </label>
-        <button type="submit">Create</button>
+    <div className=" bg-white h-24 rounded-md shadow-md text-center">
+      <div className="text-lg mt-2">Create a new user</div>
+      <form onSubmit={submitUser} className="flex w-11/12 items-center mx-auto">
+        <input
+          className="border rounded w-full py-2 px-3"
+          name="username"
+          type="text"
+          value={newUserName}
+          placeholder="User Name"
+          onChange={(e) => {
+            setNewUserName(e.target.value);
+          }}
+        />
+
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 ml-1 rounded"
+        >
+          Create
+        </button>
       </form>
       <div className="text-red-700">{message}</div>
     </div>

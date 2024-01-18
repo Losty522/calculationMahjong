@@ -1,13 +1,8 @@
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import { POSITION_INDEX, usePlayerStore } from "../playerStore";
-import {
-  ChangeEvent,
-  ChangeEventHandler,
-  ReactElement,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { getAllUsers } from "../../app/action/matchMaking/userDataFunction";
+import Image from "next/image";
 
 type Props = {
   playerId: 0 | 1 | 2 | 3;
@@ -73,20 +68,29 @@ const PositionButton = (props: Props) => {
   };
 
   return (
-    <div>
-      <label htmlFor="">
-        <label>Player{props.playerId + 1}</label>
-        <select
-          onChange={handleUserChange}
-          value={playerDataState?.playerData[props.playerId].userId}
-        >
-          <option value="">Select a user</option>
-          {users?.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.userName}
-            </option>
-          ))}
-        </select>
+    <div className="flex items-center space-x-4 mb-2">
+      <div className="text-lg">{`P${props.playerId + 1}`}</div>
+      <select
+        onChange={handleUserChange}
+        value={playerDataState?.playerData[props.playerId].userId}
+      >
+        <option value="">Select a user</option>
+        {users?.map((user) => (
+          <option key={user.id} value={user.id}>
+            {user.userName}
+          </option>
+        ))}
+      </select>
+      <label htmlFor="" className="flex">
+        <Image
+          src={`/images/p_ji_e_1.gif`}
+          alt={`east image`}
+          width={20}
+          height={20}
+          onClick={() =>
+            handlePositionButton(props.playerId, POSITION_INDEX.EAST)
+          }
+        />
         <input
           type="checkbox"
           checked={Boolean(
@@ -98,10 +102,19 @@ const PositionButton = (props: Props) => {
             handlePositionButton(props.playerId, POSITION_INDEX.EAST)
           }
         />
-        E
       </label>
-      <label htmlFor="">
+      <label htmlFor="" className="flex">
+        <Image
+          src={`/images/p_ji_s_1.gif`}
+          alt={`SOUTH image`}
+          width={20}
+          height={20}
+          onClick={() =>
+            handlePositionButton(props.playerId, POSITION_INDEX.SOUTH)
+          }
+        />
         <input
+          className="rounded"
           type="checkbox"
           checked={Boolean(
             playerDataState?.playerData[props.playerId].startPositionFlag[
@@ -112,9 +125,17 @@ const PositionButton = (props: Props) => {
             handlePositionButton(props.playerId, POSITION_INDEX.SOUTH)
           }
         />
-        S
       </label>
-      <label htmlFor="">
+      <label htmlFor="" className="flex">
+        <Image
+          src={`/images/p_ji_w_1.gif`}
+          alt={`WEST image`}
+          width={20}
+          height={20}
+          onClick={() =>
+            handlePositionButton(props.playerId, POSITION_INDEX.WEST)
+          }
+        />
         <input
           type="checkbox"
           checked={Boolean(
@@ -126,10 +147,17 @@ const PositionButton = (props: Props) => {
             handlePositionButton(props.playerId, POSITION_INDEX.WEST)
           }
         />
-        W
       </label>
-
-      <label htmlFor="">
+      <label htmlFor="" className="flex">
+        <Image
+          src={`/images/p_ji_n_1.gif`}
+          alt={`NORTH image`}
+          width={20}
+          height={20}
+          onClick={() =>
+            handlePositionButton(props.playerId, POSITION_INDEX.NORTH)
+          }
+        />
         <input
           type="checkbox"
           checked={Boolean(
@@ -141,7 +169,6 @@ const PositionButton = (props: Props) => {
             handlePositionButton(props.playerId, POSITION_INDEX.NORTH)
           }
         />
-        N
       </label>
     </div>
   );

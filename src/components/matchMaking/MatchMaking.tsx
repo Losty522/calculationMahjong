@@ -56,32 +56,39 @@ const MatchMaking = () => {
   return (
     <>
       <div>
-        <Link href="/">Cancel</Link>
-        <button
-          type="button"
-          className="border border-black mr-3"
-          onClick={() => {
-            handleShufflePosition();
-          }}
-        >
-          change positon randomly
-        </button>
+        <PositionButton playerId={PLAYER_INDEX.PLAYER1} />
+        <PositionButton playerId={PLAYER_INDEX.PLAYER2} />
+        <PositionButton playerId={PLAYER_INDEX.PLAYER3} />
+        <PositionButton playerId={PLAYER_INDEX.PLAYER4} />
+      </div>
 
+      <button
+        type="button"
+        className="border border-black bg-slate-400 rounded w-6/12 py-2 px-3"
+        onClick={() => {
+          handleShufflePosition();
+        }}
+      >
+        Positon Random
+      </button>
+      <p className="text-red-600 text-center">{message}</p>
+      <div className="flex w-8/12 justify-between text-center">
         <button
-          className="border border-black mr-3"
+          className="border border-black bg-blue-400 rounded w-full py-2 px-3 mr-6"
           type="button"
           onClick={() => {
             handleResetStrage();
           }}
         >
-          Start Match
+          Start
         </button>
-        <p className="text-red-600">{message}</p>
-        <br />
-        <PositionButton playerId={PLAYER_INDEX.PLAYER1} />
-        <PositionButton playerId={PLAYER_INDEX.PLAYER2} />
-        <PositionButton playerId={PLAYER_INDEX.PLAYER3} />
-        <PositionButton playerId={PLAYER_INDEX.PLAYER4} />
+
+        <Link
+          href="/"
+          className="border border-black bg-red-500 rounded w-full py-2 px-3"
+        >
+          Cancel
+        </Link>
       </div>
     </>
   );
