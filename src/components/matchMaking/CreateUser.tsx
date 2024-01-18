@@ -12,7 +12,10 @@ const CreateUser = () => {
   const submitUser = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-
+      if (newUserName === "") {
+        setMessage("Error,name is empty");
+        return;
+      }
       await addUser(newUserName); //use server function,for saving user data by prisma
       setMessage("created new user successfully");
       setNewUserName("");
@@ -28,11 +31,14 @@ const CreateUser = () => {
   }
 
   return (
-    <div className=" bg-white h-24 rounded-md shadow-md text-center">
+    <div className=" bg-white h-100px rounded-md shadow-md text-center">
       <div className="text-lg mt-2">Create a new user</div>
-      <form onSubmit={submitUser} className="flex w-11/12 items-center mx-auto">
+      <form
+        onSubmit={submitUser}
+        className="flex w-11/12 items-center mx-auto mb-1"
+      >
         <input
-          className="border rounded w-full py-2 px-3"
+          className="border rounded w-full py-1 px-3"
           name="username"
           type="text"
           value={newUserName}
@@ -44,12 +50,12 @@ const CreateUser = () => {
 
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 ml-1 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 ml-1 rounded"
         >
           Create
         </button>
       </form>
-      <div className="text-red-700">{message}</div>
+      <div className="text-red-700 ">{message}</div>
     </div>
   );
 };

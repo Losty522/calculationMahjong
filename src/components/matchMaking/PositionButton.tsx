@@ -53,7 +53,6 @@ const PositionButton = (props: Props) => {
 
   const handleUserChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectUserId = e.target.value;
-    console.log(e.target.value);
     const findUserData = users?.find(
       (userData) => userData.id === selectUserId
     );

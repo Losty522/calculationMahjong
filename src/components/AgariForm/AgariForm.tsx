@@ -258,6 +258,11 @@ const AgariForm = () => {
       //oya player is not win
       fieldDataState?.changeHonba(-fieldDataState?.honba); //reset honba into 0
       fieldDataState?.changeRound(1); //add 1 into round. move to next round
+      let nextOyaID =
+        Number(fieldDataState?.oyaId) + 1 >= 4
+          ? 0
+          : Number(fieldDataState?.oyaId) + 1;
+      fieldDataState?.changeOyaId(nextOyaID);
     }
 
     // fieldDataState?.changeNextOya();
