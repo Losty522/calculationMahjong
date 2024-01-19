@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { AGARI_WAY, instantMenuState, useAgariFormData } from "../playerStore";
 import InstantMenu from "./InstantMenu";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 type Props = {
   playerIndex: number;
@@ -21,6 +22,7 @@ const PointForm = (props: Props) => {
 
       <label htmlFor="Fu">Fu</label>
       <button
+        className="mx-1"
         type="button"
         onClick={() => {
           const trueCount = agariStoreData.agariPlayer.filter(
@@ -58,9 +60,10 @@ const PointForm = (props: Props) => {
           }
         }}
       >
-        -
+        <FaMinus />
       </button>
       <input
+        className="text-center"
         name="Fu"
         type="number"
         value={
@@ -74,6 +77,7 @@ const PointForm = (props: Props) => {
         readOnly
       />
       <button
+        className="mx-1"
         type="button"
         onClick={() => {
           if (agariStoreData.agariData[props.playerIndex].fuIndex <= 9) {
@@ -87,12 +91,15 @@ const PointForm = (props: Props) => {
           }
         }}
       >
-        +
+        <FaPlus />
       </button>
 
-      <label htmlFor="Han">Han</label>
+      <label htmlFor="Han" className="ml-4">
+        Han
+      </label>
       <button
         type="button"
+        className="mx-1"
         onClick={() => {
           if (
             // case of tsumo and 20fu and han is more than 2
@@ -126,15 +133,20 @@ const PointForm = (props: Props) => {
           }
         }}
       >
-        -
+        <FaMinus />
       </button>
       <input
+        className="text-center"
         name="Han"
         type="number"
         value={agariStoreData.agariData[props.playerIndex].han}
+        step={1}
+        min={1}
+        max={13}
         readOnly
       />
       <button
+        className="mx-1"
         type="button"
         onClick={() => {
           if (agariStoreData.agariData[props.playerIndex].han <= 12) {
@@ -142,7 +154,7 @@ const PointForm = (props: Props) => {
           }
         }}
       >
-        +
+        <FaPlus />
       </button>
 
       <InstantMenu

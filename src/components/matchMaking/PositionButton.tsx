@@ -84,8 +84,9 @@ const PositionButton = (props: Props) => {
         <Image
           src={`/images/p_ji_e_1.gif`}
           alt={`east image`}
+          className="h-7 w-5"
           width={20}
-          height={20}
+          height={28}
           onClick={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.EAST)
           }
@@ -106,8 +107,9 @@ const PositionButton = (props: Props) => {
         <Image
           src={`/images/p_ji_s_1.gif`}
           alt={`SOUTH image`}
+          className="h-7 w-5"
           width={20}
-          height={20}
+          height={28}
           onClick={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.SOUTH)
           }
@@ -129,8 +131,9 @@ const PositionButton = (props: Props) => {
         <Image
           src={`/images/p_ji_w_1.gif`}
           alt={`WEST image`}
+          className="h-7 w-5"
           width={20}
-          height={20}
+          height={28}
           onClick={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.WEST)
           }
@@ -151,8 +154,9 @@ const PositionButton = (props: Props) => {
         <Image
           src={`/images/p_ji_n_1.gif`}
           alt={`NORTH image`}
+          className="h-7 w-5"
           width={20}
-          height={20}
+          height={28}
           onClick={() =>
             handlePositionButton(props.playerId, POSITION_INDEX.NORTH)
           }

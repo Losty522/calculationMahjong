@@ -23,8 +23,9 @@ const AgariFrom = (props: Props) => {
   }
 
   return (
-    <label>
+    <label className="bg-green-300 rounded my-1">
       <input
+        className="ml-4"
         type="checkbox"
         checked={agariData.agariFrom[Number(props.playerData.id)]}
         onChange={(e) => {

@@ -35,6 +35,7 @@ const AgariPlayer = (props: Props) => {
   return (
     <label>
       <input
+        className="ml-3"
         type="checkbox"
         checked={agariData.agariPlayer[Number(props.playerData.id)]}
         onChange={(e) => {

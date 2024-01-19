@@ -54,6 +54,7 @@ const Field = () => {
         </div>
         <div className="flex text-xl">
           <Image
+            className="h-full w-full"
             src={`/images/honba.png`}
             alt={`east image`}
             width={10}
@@ -63,6 +64,7 @@ const Field = () => {
         </div>
         <div className="flex text-xl mr-2">
           <Image
+            className="h-full w-full"
             src={`/images/chips.png`}
             alt={`east image`}
             width={10}

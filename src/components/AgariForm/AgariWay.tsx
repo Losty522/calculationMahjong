@@ -24,7 +24,7 @@ const AgariWay = () => {
 
   return (
     <>
-      <label>
+      <label className="mr-3">
         <input
           type="radio"
           name="agariWay"
@@ -34,7 +34,7 @@ const AgariWay = () => {
         Tsumo
       </label>
 
-      <label>
+      <label className="ml-3">
         <input
           type="radio"
           name="agariWay"

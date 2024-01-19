@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  instantMenuState,
-  useAgariFormData,
-  usePlayerStore,
-} from "../playerStore";
-import { useGetFromStore } from "@/hooks/zustandHooks";
+import { instantMenuState, useAgariFormData } from "../playerStore";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 type Props = {
   playerIndex: number;
@@ -13,7 +9,6 @@ type Props = {
 
 const InstantMenu = (props: Props) => {
   const agariStoreData = useAgariFormData();
-  const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
 
   const handleChangeInstantMenu = (MenuState: number) => {
     const changeFuAndHan = (han: number) => {
@@ -42,7 +37,7 @@ const InstantMenu = (props: Props) => {
     <div>
       <button
         type="button"
-        className="border border-black mr-1 ml-1"
+        className="bg-blue-400 hover:bg-blue-500 text-white py-1 px-1 mr-1 rounded text-sm"
         onClick={() => {
           handleChangeInstantMenu(instantMenuState.Mangan);
         }}
@@ -51,7 +46,7 @@ const InstantMenu = (props: Props) => {
       </button>
       <button
         type="button"
-        className="border border-black mr-1 ml-1"
+        className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-1 mr-1 rounded text-sm"
         onClick={() => {
           handleChangeInstantMenu(instantMenuState.Haneman);
         }}
@@ -60,7 +55,7 @@ const InstantMenu = (props: Props) => {
       </button>
       <button
         type="button"
-        className="border border-black mr-1 ml-1"
+        className="bg-red-500 hover:bg-red-600 text-white py-1 px-1 mr-1 rounded text-sm"
         onClick={() => {
           handleChangeInstantMenu(instantMenuState.Baiman);
         }}
@@ -69,7 +64,7 @@ const InstantMenu = (props: Props) => {
       </button>
       <button
         type="button"
-        className="border border-black mr-1 ml-1"
+        className="bg-purple-500 hover:bg-purple-600 text-white py-1 px-1 mr-1 rounded text-sm"
         onClick={() => {
           handleChangeInstantMenu(instantMenuState.Sanbaiman);
         }}
@@ -79,7 +74,7 @@ const InstantMenu = (props: Props) => {
 
       <button
         type="button"
-        className="border border-black mr-1 ml-1"
+        className="bg-pink-500 hover:bg-pink-600 text-white py-1 px-1 mr-1 rounded text-sm"
         onClick={() => {
           handleChangeInstantMenu(instantMenuState.Yakuman);
         }}
@@ -89,8 +84,9 @@ const InstantMenu = (props: Props) => {
 
       {agariStoreData.agariData[props.playerIndex].han >= 13 && (
         <div>
-          <label>How many yakuman</label>
+          <label>How many times</label>
           <button
+            className="mx-1"
             type="button"
             onClick={() => {
               if (
@@ -102,17 +98,22 @@ const InstantMenu = (props: Props) => {
               }
             }}
           >
-            -
+            <FaMinus />
           </button>
 
           <input
+            className="text-center"
             type="number"
             value={Number(
               agariStoreData.agariData[props.playerIndex].yakumanNum
             )}
+            step={1}
+            min={1}
+            max={9}
             readOnly
           />
           <button
+            className="mx-1"
             type="button"
             onClick={() => {
               if (
@@ -124,7 +125,7 @@ const InstantMenu = (props: Props) => {
               }
             }}
           >
-            +
+            <FaPlus />
           </button>
         </div>
       )}
