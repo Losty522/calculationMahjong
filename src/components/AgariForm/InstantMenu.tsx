@@ -34,7 +34,7 @@ const InstantMenu = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="mt-3">
       <button
         type="button"
         className="bg-blue-400 hover:bg-blue-500 text-white py-1 px-1 mr-1 rounded text-sm"

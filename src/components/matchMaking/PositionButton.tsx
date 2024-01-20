@@ -53,7 +53,7 @@ const PositionButton = (props: Props) => {
   };
 
   return (
-    <div className="flex items-center space-x-4 mb-2">
+    <div className="flex items-center space-x-4 mb-4">
       <div className="text-lg">{`P${props.playerId + 1}`}</div>
       <select
         onChange={handleUserChange}
