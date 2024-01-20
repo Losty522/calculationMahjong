@@ -13,7 +13,6 @@ const page = () => {
           <div className="mt-3 mb-2 text-4xl text-center font-extrabold text-gray-800">
             Match Making
           </div>
-          <CreateUser />
           <MatchMaking />
         </div>
       </main>

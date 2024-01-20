@@ -1,14 +1,41 @@
 "use clitent";
 import React, { useState } from "react";
-import { addUser } from "../../app/action/matchMaking/userDataFunction";
+import {
+  addUser,
+  getAllUsers,
+} from "../../app/action/matchMaking/userDataFunction";
 import FinishedMatch from "../FinishedMatch";
 import { usePlayerStore } from "../playerStore";
 import { useGetFromStore } from "@/hooks/zustandHooks";
+import MatchMaking from "./MatchMaking";
 
-const CreateUser = () => {
+type Props = {
+  setUsers: React.Dispatch<
+    React.SetStateAction<
+      | {
+          id: string;
+          userName: string;
+        }[]
+      | undefined
+    >
+  >;
+};
+
+const CreateUser = (props: Props) => {
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const [newUserName, setNewUserName] = useState("");
   const [message, setMessage] = useState(" ");
+
+  // get all users data
+  const fetchUsers = async () => {
+    try {
+      const allUsers = await getAllUsers(); //get all users data from prisma
+      await props.setUsers(allUsers); //set all users data
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
   const submitUser = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
@@ -19,6 +46,7 @@ const CreateUser = () => {
       await addUser(newUserName); //use server function,for saving user data by prisma
       setMessage("created new user successfully");
       setNewUserName("");
+      fetchUsers(); //update user data
     } catch (error) {
       setMessage("Error,your name is already in use");
       console.log(error);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   PLAYER_INDEX,
   POSITION_INDEX,
@@ -10,13 +10,31 @@ import { useGetFromStore } from "@/hooks/zustandHooks";
 import Link from "next/link";
 import PositionButton from "./PositionButton";
 import { useRouter } from "next/navigation";
+import CreateUser from "./CreateUser";
+import { getAllUsers } from "../../app/action/matchMaking/userDataFunction";
 
 const MatchMaking = () => {
   const router = useRouter();
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
   const fieldDataState = useGetFromStore(useFeildStatus, (state) => state);
   const [message, setMessage] = useState("");
-  const displayDirection = ["East", "South", "West", "North"];
+
+  const [users, setUsers] = useState<{ id: string; userName: string }[]>();
+
+  // get all users data
+  const fetchUsers = async () => {
+    try {
+      const allUsers = await getAllUsers(); //get all users data from prisma
+      await setUsers(allUsers); //set all users data
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const handleResetStrage = () => {
     playerDataState?.updateRanking(); //update ranking
     fieldDataState?.changeOyaId(Number(playerDataState?.startPositonId[0])); //update OyaId\
@@ -55,16 +73,18 @@ const MatchMaking = () => {
 
   return (
     <>
+      <CreateUser setUsers={setUsers} />
       <div>
-        <PositionButton playerId={PLAYER_INDEX.PLAYER1} />
-        <PositionButton playerId={PLAYER_INDEX.PLAYER2} />
-        <PositionButton playerId={PLAYER_INDEX.PLAYER3} />
-        <PositionButton playerId={PLAYER_INDEX.PLAYER4} />
+        <div className="text-center font-bold">Select 4 player names.</div>
+        <PositionButton playerId={PLAYER_INDEX.PLAYER1} users={users} />
+        <PositionButton playerId={PLAYER_INDEX.PLAYER2} users={users} />
+        <PositionButton playerId={PLAYER_INDEX.PLAYER3} users={users} />
+        <PositionButton playerId={PLAYER_INDEX.PLAYER4} users={users} />
       </div>
 
       <button
         type="button"
-        className="border border-black bg-slate-400 rounded w-6/12 py-2 px-3"
+        className="border border-black bg-slate-400 rounded w-4/12 py-2 px-3"
         onClick={() => {
           handleShufflePosition();
         }}
@@ -72,7 +92,7 @@ const MatchMaking = () => {
         Positon Random
       </button>
       <p className="text-red-600 text-center">{message}</p>
-      <div className="flex w-8/12 justify-between text-center">
+      <div className="flex w-6/12 justify-between text-center">
         <button
           className="border border-black bg-blue-400 rounded w-full py-2 px-3 mr-6"
           type="button"

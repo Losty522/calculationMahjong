@@ -11,13 +11,13 @@ type Props = {
 const PointForm = (props: Props) => {
   const agariStoreData = useAgariFormData();
 
-  useEffect(() => {
-    console.log(agariStoreData);
-    console.log(agariStoreData.agariWay);
-  }, [agariStoreData, agariStoreData.agariWay]);
+  // useEffect(() => {
+  //   console.log(agariStoreData);
+  //   console.log(agariStoreData.agariWay);
+  // }, [agariStoreData, agariStoreData.agariWay]);
 
   return (
-    <>
+    <div className="bg-blue-100  w-11/12 mb-2 rounded">
       <h2>Player: {props.playerName}</h2>
 
       <label htmlFor="Fu">Fu</label>
@@ -161,7 +161,7 @@ const PointForm = (props: Props) => {
         playerName={props.playerName}
         playerIndex={props.playerIndex}
       />
-    </>
+    </div>
   );
 };
 

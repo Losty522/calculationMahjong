@@ -6,6 +6,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { addMatchResult } from "@/app/action/matchResult/matchDataFunction";
 import FinishedMatch from "../FinishedMatch";
+import {
+  FaArrowRight,
+  FaMedal,
+  FaMinus,
+  FaPlus,
+  FaTrophy,
+} from "react-icons/fa";
+import { PiBirdFill } from "react-icons/pi";
 
 export type resultObjType = {
   timestamp: number;
@@ -141,24 +149,58 @@ const EditMatchBonus = () => {
   }
 
   return (
-    <form onSubmit={submitBonus}>
-      {playerDataState?.playerOrder.map((data, index) => (
-        <div key={data} className="flex">
-          <div>
-            {playerDataState?.playerData[data].playerName}{" "}
-            {playerDataState?.playerData[data].point}
-          </div>
-          <div>
-            {"--->"}
-            {playerDataState?.playerData[data].point +
-              bonus[index] +
-              placeBonus[index]}
-          </div>
+    <form
+      onSubmit={submitBonus}
+      className=" h-screen w-11/12 mx-auto flex flex-col items-center bg-green-100 text-center"
+    >
+      <div className="text-center text-lg my-1 font-bold bg-green-400 w-11/12 rounded">
+        Bonus Edit Form
+      </div>
+      <div className="my-1 bg-green-200 rounded w-11/12 ">
+        <div className="font-bold flex justify-center">
+          Result (Before <FaArrowRight className="mt-1 mx-1" /> After)
         </div>
-      ))}
 
-      <label>
-        {" "}
+        {playerDataState?.playerOrder.map((data, index) => (
+          <div key={data} className="flex my-1 justify-center">
+            {index === 0 ? (
+              <div className="flex">
+                <FaTrophy className="text-yellow-500" />
+                <p className="mr-1">1st</p>
+              </div>
+            ) : index === 1 ? (
+              <div className="flex">
+                <FaTrophy className="text-slate-500" />
+                <p className="mr-1">2nd</p>
+              </div>
+            ) : index === 2 ? (
+              <div className="flex">
+                <FaTrophy className="text-amber-600" />
+                <p className="mr-1">3rd</p>
+              </div>
+            ) : (
+              <div className="flex">
+                <PiBirdFill className="text-yellow-600" />
+                <p className="mr-1">4th</p>
+              </div>
+            )}
+            <div className="flex">
+              <p className="mx-3">
+                {playerDataState?.playerData[data].playerName}{" "}
+              </p>
+              {playerDataState?.playerData[data].point}
+            </div>
+            <FaArrowRight className="mt-1 mx-1" />
+            <div>
+              {playerDataState?.playerData[data].point +
+                bonus[index] +
+                placeBonus[index]}
+            </div>
+          </div>
+        ))}
+      </div>
+      <label className="my-1 bg-green-200 rounded w-11/12">
+        <div className="font-bold">Return points (default:25000)</div>
         Return 30000
         <input
           type="checkbox"
@@ -170,11 +212,10 @@ const EditMatchBonus = () => {
         />
       </label>
 
-      <br />
-      <label className="flex flex-col">
-        <div>Place bonus</div>
-        <div>
-          <label>
+      <label className="my-1 bg-green-200 rounded w-11/12">
+        <div className="font-bold">Place bonus</div>
+        <div className="flex flex-col">
+          <label className="my-1">
             None
             <input
               type="radio"
@@ -187,8 +228,8 @@ const EditMatchBonus = () => {
               }}
             />
           </label>
-          <label>
-            5-10
+          <label className="my-1">
+            5000-10000
             <input
               type="radio"
               name="bonus"
@@ -199,8 +240,8 @@ const EditMatchBonus = () => {
               }}
             />
           </label>
-          <label>
-            10-20
+          <label className="my-1">
+            10000-20000
             <input
               type="radio"
               name="bonus"
@@ -211,8 +252,8 @@ const EditMatchBonus = () => {
               }}
             />
           </label>
-          <label>
-            10-30
+          <label className="my-1">
+            10000-30000
             <input
               type="radio"
               name="bonus"
@@ -223,8 +264,8 @@ const EditMatchBonus = () => {
               }}
             />
           </label>
-          <label>
-            20-30
+          <label className="my-1">
+            20000-30000
             <input
               type="radio"
               name="bonus"
@@ -235,7 +276,7 @@ const EditMatchBonus = () => {
               }}
             />
           </label>
-          <label>
+          <label className="my-1">
             Custom
             <input
               type="radio"
@@ -248,8 +289,8 @@ const EditMatchBonus = () => {
               }}
             />
           </label>
-          <label>
-            2st Place
+          <label className="my-1">
+            2nd Place Bonus
             <button
               type="button"
               onClick={() => {
@@ -258,21 +299,29 @@ const EditMatchBonus = () => {
                 }
               }}
             >
-              -
+              <FaMinus className="mx-1" />
             </button>
-            <input type="number" value={customPlaceBonus[0]} readOnly />
+            <input
+              type="number"
+              className="text-center"
+              value={customPlaceBonus[0]}
+              step={1000}
+              min={1000}
+              max={100000}
+              readOnly
+            />
             <button
               type="button"
               onClick={() => {
                 setCustomPlaceBonus((prev) => [prev[0] + 1000, prev[1]]);
               }}
             >
-              +
+              <FaPlus className="mx-1" />
             </button>
           </label>
 
-          <label>
-            1st Place
+          <label className="my-1">
+            1st Place Bonus
             <button
               type="button"
               onClick={() => {
@@ -281,34 +330,46 @@ const EditMatchBonus = () => {
                 }
               }}
             >
-              -
+              <FaMinus className="mx-1" />
             </button>
-            <input type="number" value={customPlaceBonus[1]} readOnly />
+            <input
+              className="text-center"
+              type="number"
+              value={customPlaceBonus[1]}
+              step={1000}
+              min={1000}
+              max={100000}
+              readOnly
+            />
             <button
               type="button"
               onClick={() => {
                 setCustomPlaceBonus((prev) => [prev[0], prev[1] + 1000]);
               }}
             >
-              +
+              <FaPlus className="mx-1" />
             </button>
           </label>
         </div>
       </label>
 
-      <br />
-      <button type="submit" className="border border-black">
-        OK
-      </button>
-      <Link href="/match">
+      <div className="flex justify-between  w-3/6 mt-4">
         <button
-          type="button"
-          className="border border-black"
-          onClick={() => {}}
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-1 mb-1 rounded"
         >
-          Cancel
+          OK
         </button>
-      </Link>
+        <Link href="/match">
+          <button
+            type="button"
+            className="bg-red-500 hover:bg-red-700 text-white py-1 px-1 mb-1 rounded"
+            onClick={() => {}}
+          >
+            Cancel
+          </button>
+        </Link>
+      </div>
     </form>
   );
 };

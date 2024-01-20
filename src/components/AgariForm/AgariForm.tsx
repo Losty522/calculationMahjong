@@ -21,7 +21,6 @@ import AgariWay from "./AgariWay";
 import AgariPlayer from "./AgariPlayer";
 import AgariFrom from "./AgariFrom";
 import Link from "next/link";
-import { log } from "console";
 
 const AgariForm = () => {
   const agariData = useAgariFormData();
@@ -125,7 +124,7 @@ const AgariForm = () => {
       });
     } else {
       // in case of tsumo
-      agariPlayerIndex.forEach((data) => {
+      agariPlayerIndex.forEach((data, index) => {
         if (data === fieldDataState?.oyaId) {
           playerDataState?.calculatedPoints(
             data,
@@ -133,8 +132,8 @@ const AgariForm = () => {
               agariData.agariData[data].han - 1
             ] *
               3 *
-              (agariData.agariData[agariPlayerIndex[data]].han >= 13
-                ? agariData.agariData[agariPlayerIndex[data]].yakumanNum
+              (agariData.agariData[data].han >= 13
+                ? agariData.agariData[data].yakumanNum
                 : 1) + //if yakuman, multiply yakumanNum // oya tsumo each 3 players so multiply by 3
               fieldDataState.honba * 300 + //add honba point *300
               fieldDataState.chips * 1000 //add chips *1000
@@ -149,8 +148,8 @@ const AgariForm = () => {
               tsumoKoPointTable[agariData.agariData[data].fuIndex][
                 agariData.agariData[data].han - 1
               ][1]) *
-              (agariData.agariData[agariPlayerIndex[data]].han >= 13
-                ? agariData.agariData[agariPlayerIndex[data]].yakumanNum
+              (agariData.agariData[data].han >= 13
+                ? agariData.agariData[data].yakumanNum
                 : 1) + //if yakuman, multiply yakumanNum
               (fieldDataState != undefined ? fieldDataState.honba * 300 : 0) + //add honba point *300
               (fieldDataState != undefined ? fieldDataState.chips * 1000 : 0) //add honba point *300
@@ -265,9 +264,6 @@ const AgariForm = () => {
       fieldDataState?.changeOyaId(nextOyaID);
     }
 
-    // fieldDataState?.changeNextOya();
-    console.log(agariPlayerIndex);
-    console.log(fromPlayerIndex);
     return true;
   };
 
@@ -287,11 +283,14 @@ const AgariForm = () => {
   return (
     <form
       action={updateField}
-      className=" h-screen w-11/12 mx-auto flex flex-col items-center text-center"
+      className=" h-screen w-11/12 mx-auto flex flex-col items-center text-center bg-green-100"
     >
-      <div className="text-center text-lg my-1 font-bold">Agari Form</div>
-      <div className="my-1 font-bold">Agari Player(s)</div>
-      <div className="my-1 bg-green-300 rounded ">
+      <div className="text-center text-lg my-1 font-bold bg-green-400 w-11/12 rounded">
+        Agari Form
+      </div>
+
+      <div className="my-1 bg-green-200 rounded w-11/12">
+        <div className="my-1 font-bold">Agari Player(s)</div>
         <AgariPlayer
           playerData={playerDataState?.playerData[PLAYER_INDEX.PLAYER1]}
         />
@@ -306,59 +305,57 @@ const AgariForm = () => {
         />
       </div>
 
-      <div className="my-1 bg-green-300 rounded">
+      <div className="my-1 bg-green-200 rounded w-11/12">
+        <div className="my-1 font-bold">Agari way</div>
         <AgariWay />
       </div>
-      <div className="bg-green-300 rounded my-1">
-        {agariData.agariPlayer[PLAYER_INDEX.PLAYER1] && (
-          <PointForm
-            playerIndex={Number(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER1].id
-            )}
-            playerName={String(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER1]?.playerName
-            )}
-          />
-        )}
-      </div>
-      <div className="bg-green-300 rounded my-1">
-        {agariData.agariPlayer[PLAYER_INDEX.PLAYER2] && (
-          <PointForm
-            playerIndex={Number(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER2].id
-            )}
-            playerName={String(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER2]?.playerName
-            )}
-          />
-        )}
-      </div>
-      <div className="bg-green-300 rounded my-1">
-        {agariData.agariPlayer[PLAYER_INDEX.PLAYER3] && (
-          <PointForm
-            playerIndex={Number(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER3].id
-            )}
-            playerName={String(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER3]?.playerName
-            )}
-          />
-        )}
-      </div>
-      <div className="bg-green-300 rounded my-1">
-        {agariData.agariPlayer[PLAYER_INDEX.PLAYER4] && (
-          <PointForm
-            playerIndex={Number(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER4].id
-            )}
-            playerName={String(
-              playerDataState?.playerData[PLAYER_INDEX.PLAYER4]?.playerName
-            )}
-          />
-        )}
-      </div>
+
+      {agariData.agariPlayer[PLAYER_INDEX.PLAYER1] && (
+        <PointForm
+          playerIndex={Number(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER1].id
+          )}
+          playerName={String(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER1]?.playerName
+          )}
+        />
+      )}
+
+      {agariData.agariPlayer[PLAYER_INDEX.PLAYER2] && (
+        <PointForm
+          playerIndex={Number(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER2].id
+          )}
+          playerName={String(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER2]?.playerName
+          )}
+        />
+      )}
+
+      {agariData.agariPlayer[PLAYER_INDEX.PLAYER3] && (
+        <PointForm
+          playerIndex={Number(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER3].id
+          )}
+          playerName={String(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER3]?.playerName
+          )}
+        />
+      )}
+
+      {agariData.agariPlayer[PLAYER_INDEX.PLAYER4] && (
+        <PointForm
+          playerIndex={Number(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER4].id
+          )}
+          playerName={String(
+            playerDataState?.playerData[PLAYER_INDEX.PLAYER4]?.playerName
+          )}
+        />
+      )}
+
       {!agariData.agariWay[AGARI_WAY.TSUMO] && (
-        <div className="my-2">
+        <div className="bg-green-200 w-11/12 my-2">
           <h2 className="text-center my-1 font-bold">Deal-in Player</h2>
           <AgariFrom
             playerData={playerDataState?.playerData[PLAYER_INDEX.PLAYER1]}

@@ -1,13 +1,14 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import MatchHistory from "@/components/matchHistory/MatchHistory";
-import Link from "next/link";
 
 const page = () => {
   return (
-    <>
-      <div>MatchHistory page</div>
-      <Link href="/">Go Home</Link>
+    <div>
+      <Header />
       <MatchHistory />
-    </>
+      <Footer />
+    </div>
   );
 };
 

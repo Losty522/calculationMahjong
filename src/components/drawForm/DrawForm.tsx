@@ -64,9 +64,16 @@ const DrawForm = () => {
   };
 
   return (
-    <form action={submitDraw}>
-      <div>Tenpai players</div>
-      <div className="flex flex-col">
+    <form
+      action={submitDraw}
+      className=" h-screen w-11/12 mx-auto flex flex-col items-center text-center bg-green-100"
+    >
+      <div className="text-center text-lg my-1 font-bold bg-green-400 w-11/12 rounded">
+        Draw Form
+      </div>
+
+      <div className="flex flex-col my-1 bg-green-200 rounded w-11/12">
+        <div className="font-bold">Tenpai players</div>
         {playerDataState?.playerData.map((data) => (
           <label key={data.id}>
             {playerDataState?.playerData[data.id].playerName}
@@ -84,20 +91,26 @@ const DrawForm = () => {
         ))}
       </div>
       <br />
-      <button type="submit" className="border border-black">
-        OK
-      </button>
-      <Link href="/match">
+
+      <div className="flex justify-between  w-3/6 mt-4">
         <button
-          type="button"
-          className="border border-black"
-          onClick={() => {
-            resetTenpai();
-          }}
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-1 mb-1 rounded"
         >
-          Cancel
+          OK
         </button>
-      </Link>
+        <Link href="/match">
+          <button
+            type="button"
+            className="bg-red-500 hover:bg-red-700 text-white py-1 px-1 mb-1 rounded"
+            onClick={() => {
+              resetTenpai();
+            }}
+          >
+            Cancel
+          </button>
+        </Link>
+      </div>
     </form>
   );
 };

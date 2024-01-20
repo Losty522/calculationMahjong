@@ -15,9 +15,6 @@ const Field = () => {
   if (!playerDataState) {
     return null;
   }
-  const handleAgari = () => {
-    // next create agari functiona
-  };
   //this match is already finished, go back to the home.
   if (playerDataState?.isMatchFinished) {
     return <FinishedMatch />;
@@ -32,14 +29,20 @@ const Field = () => {
         </Link>
 
         <Link href="/draw">
-          <button className="bg-slate-500 hover:bg-blue-700 text-white py-2 px-4 ml-1 rounded">
+          <button className="bg-slate-500 hover:bg-slate-700 text-white py-2 px-4 ml-1 rounded">
             Draw
+          </button>
+        </Link>
+
+        <Link href="/editData">
+          <button className="bg-yellow-700 hover:bg-yellow-800 text-white py-2 px-4 ml-1 rounded">
+            Edit Data
           </button>
         </Link>
 
         <Link href="/editMatchBonus">
           <button
-            className="bg-red-500 hover:bg-blue-700 text-white py-2 px-4 ml-1 rounded"
+            className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 ml-1 rounded"
             onClick={() => {
               playerDataState.updateRanking();
             }}
@@ -48,7 +51,7 @@ const Field = () => {
           </button>
         </Link>
       </div>
-      <div className="flex bg-lime-500 justify-between mx-auto my-1 w-3/6 rounded">
+      <div className="flex bg-lime-500 border border-amber-800  justify-between mx-auto my-1 w-3/6 rounded">
         <div className="text-xl ml-2">
           {feildStatus?.displayRound[feildStatus?.round]}
         </div>

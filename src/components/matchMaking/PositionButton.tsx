@@ -1,28 +1,14 @@
 import { useGetFromStore } from "@/hooks/zustandHooks";
 import { POSITION_INDEX, usePlayerStore } from "../playerStore";
 import { ChangeEvent, useEffect, useState } from "react";
-import { getAllUsers } from "../../app/action/matchMaking/userDataFunction";
 import Image from "next/image";
 
 type Props = {
   playerId: 0 | 1 | 2 | 3;
+  users: { id: string; userName: string }[] | undefined;
 };
 const PositionButton = (props: Props) => {
   const playerDataState = useGetFromStore(usePlayerStore, (state) => state);
-  const [users, setUsers] = useState<{ id: string; userName: string }[]>();
-  useEffect(() => {
-    // get all users data
-    const fetchUsers = async () => {
-      try {
-        const allUsers = await getAllUsers(); //get all users data from prisma
-        await setUsers(allUsers); //set all users data
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
 
   const handlePositionButton = (playerId: number, positionIndex: number) => {
     const positonArray: number[] = [];
@@ -53,7 +39,7 @@ const PositionButton = (props: Props) => {
 
   const handleUserChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selectUserId = e.target.value;
-    const findUserData = users?.find(
+    const findUserData = props.users?.find(
       (userData) => userData.id === selectUserId
     );
     if (findUserData) {
@@ -74,7 +60,7 @@ const PositionButton = (props: Props) => {
         value={playerDataState?.playerData[props.playerId].userId}
       >
         <option value="">Select a user</option>
-        {users?.map((user) => (
+        {props.users?.map((user) => (
           <option key={user.id} value={user.id}>
             {user.userName}
           </option>

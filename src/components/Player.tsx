@@ -75,8 +75,8 @@ const Player = (props: Props) => {
 
   return (
     <div
-      className={`border border-black mt-3 w-2/6 text-center rounded ${
-        props.playerDataObj.riichi ? "bg-red-200" : "bg-green-200"
+      className={`border border-amber-800  mt-3 w-2/6 text-center rounded ${
+        props.playerDataObj.riichi ? "bg-red-200" : "bg-green-300"
       }`}
     >
       <div className="flex justify-between ml-3 mr-3">
